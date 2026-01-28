@@ -1660,52 +1660,672 @@
         </section>
     </div>
 
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+        <button class="nav-arrow nav-arrow-up" id="navUp" title="السابق (↑)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+        </button>
+        <div class="slide-counter">
+            <span id="currentSlide">1</span>
+            <span class="separator">/</span>
+            <span id="totalSlides">12</span>
+        </div>
+        <button class="nav-arrow nav-arrow-down" id="navDown" title="التالي (↓)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Fullscreen Button -->
+    <button class="fullscreen-btn" id="fullscreenBtn" title="ملء الشاشة (F)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+
+    <!-- Presenter Mode Indicator -->
+    <div class="presenter-hint" id="presenterHint">
+        <span>🎯 وضع العرض التقديمي</span>
+        <span class="hint-keys">استخدم الأسهم أو أزرار الماوس للتنقل</span>
+    </div>
+
+    <style>
+        /* Navigation Arrows */
+        .nav-arrows {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-arrow {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: rgba(30, 42, 74, 0.9);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-arrow:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: scale(1.15);
+            box-shadow: 0 6px 30px rgba(201, 162, 39, 0.4);
+        }
+
+        .nav-arrow:active {
+            transform: scale(0.95);
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-arrow:disabled:hover {
+            background: rgba(30, 42, 74, 0.9);
+            color: var(--gold);
+            transform: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-arrow svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .slide-counter {
+            background: rgba(30, 42, 74, 0.95);
+            border: 2px solid var(--gold);
+            border-radius: 25px;
+            padding: 10px 18px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide-counter .separator {
+            color: rgba(201, 162, 39, 0.5);
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: fixed;
+            top: 25px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(30, 42, 74, 0.9);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .fullscreen-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: scale(1.1);
+        }
+
+        .fullscreen-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Presenter Hint */
+        .presenter-hint {
+            position: fixed;
+            bottom: 25px;
+            right: 30px;
+            background: rgba(30, 42, 74, 0.95);
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .presenter-hint.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .presenter-hint span:first-child {
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .presenter-hint .hint-keys {
+            font-size: 13px;
+            color: rgba(250, 250, 249, 0.7);
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: rgba(30, 42, 74, 0.5);
+            z-index: 1001;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        /* Keyboard shortcut overlay */
+        .keyboard-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 42, 74, 0.98);
+            border: 3px solid var(--gold);
+            border-radius: 20px;
+            padding: 40px 50px;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .keyboard-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .keyboard-overlay h3 {
+            font-family: 'Cairo', sans-serif;
+            font-size: 24px;
+            color: var(--gold);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .shortcut-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .shortcut-keys {
+            display: flex;
+            gap: 8px;
+        }
+
+        .key {
+            background: rgba(201, 162, 39, 0.2);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .shortcut-desc {
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        .close-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .close-overlay:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        /* Help Button */
+        .help-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 80px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(30, 42, 74, 0.9);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cairo', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .help-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: scale(1.1);
+        }
+
+        /* Hide elements in fullscreen for cleaner presentation */
+        :fullscreen .nav-dots {
+            opacity: 0.3;
+        }
+
+        :fullscreen .nav-dots:hover {
+            opacity: 1;
+        }
+
+        :fullscreen .presenter-hint {
+            display: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .nav-arrows {
+                right: 15px;
+                gap: 10px;
+            }
+
+            .nav-arrow {
+                width: 45px;
+                height: 45px;
+            }
+
+            .nav-arrow svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .slide-counter {
+                padding: 8px 14px;
+                font-size: 14px;
+            }
+
+            .fullscreen-btn {
+                top: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+            }
+
+            .presenter-hint {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Keyboard Shortcuts Overlay -->
+    <div class="keyboard-overlay" id="keyboardOverlay">
+        <button class="close-overlay" id="closeOverlay">×</button>
+        <h3>اختصارات لوحة المفاتيح</h3>
+        <div class="shortcut-list">
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <span class="key">↓</span>
+                    <span class="key">→</span>
+                    <span class="key">Space</span>
+                    <span class="key">Enter</span>
+                </div>
+                <span class="shortcut-desc">الشريحة التالية</span>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <span class="key">↑</span>
+                    <span class="key">←</span>
+                    <span class="key">Backspace</span>
+                </div>
+                <span class="shortcut-desc">الشريحة السابقة</span>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <span class="key">Home</span>
+                </div>
+                <span class="shortcut-desc">الشريحة الأولى</span>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <span class="key">End</span>
+                </div>
+                <span class="shortcut-desc">الشريحة الأخيرة</span>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <span class="key">F</span>
+                </div>
+                <span class="shortcut-desc">ملء الشاشة</span>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <span class="key">?</span>
+                </div>
+                <span class="shortcut-desc">إظهار المساعدة</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Button -->
+    <button class="help-btn" id="helpBtn" title="المساعدة (?)">?</button>
+
     <script>
         // Navigation functionality
         const dots = document.querySelectorAll('.nav-dot');
         const slides = document.querySelectorAll('.slide');
         const container = document.getElementById('slidesContainer');
+        const navUp = document.getElementById('navUp');
+        const navDown = document.getElementById('navDown');
+        const currentSlideEl = document.getElementById('currentSlide');
+        const totalSlidesEl = document.getElementById('totalSlides');
+        const progressBar = document.getElementById('progressBar');
+        const presenterHint = document.getElementById('presenterHint');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const keyboardOverlay = document.getElementById('keyboardOverlay');
+        const closeOverlay = document.getElementById('closeOverlay');
+        const helpBtn = document.getElementById('helpBtn');
+
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        // Initialize
+        totalSlidesEl.textContent = totalSlides;
+        updateNavigation();
+
+        // Show presenter hint briefly on load
+        setTimeout(() => {
+            presenterHint.classList.add('show');
+            setTimeout(() => presenterHint.classList.remove('show'), 4000);
+        }, 1500);
 
         function scrollToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            currentIndex = index;
             slides[index].scrollIntoView({ behavior: 'smooth' });
+            updateNavigation();
         }
 
-        // Update active dot on scroll
+        function updateNavigation() {
+            // Update counter
+            currentSlideEl.textContent = currentIndex + 1;
+            
+            // Update progress bar
+            const progress = ((currentIndex + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update arrow buttons
+            navUp.disabled = currentIndex === 0;
+            navDown.disabled = currentIndex === totalSlides - 1;
+            
+            // Update dots
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        function nextSlide() {
+            if (currentIndex < totalSlides - 1) {
+                scrollToSlide(currentIndex + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                scrollToSlide(currentIndex - 1);
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log('Fullscreen error:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function toggleHelp() {
+            keyboardOverlay.classList.toggle('show');
+        }
+
+        // Update active slide on scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const index = Array.from(slides).indexOf(entry.target);
-                    dots.forEach((dot, i) => {
-                        dot.classList.toggle('active', i === index);
-                    });
+                    currentIndex = Array.from(slides).indexOf(entry.target);
+                    updateNavigation();
                 }
             });
         }, { threshold: 0.5 });
 
         slides.forEach(slide => observer.observe(slide));
 
-        // Click navigation
+        // Click navigation - dots
         dots.forEach((dot, index) => {
             dot.addEventListener('click', () => scrollToSlide(index));
         });
 
-        // Keyboard navigation
+        // Click navigation - arrows
+        navUp.addEventListener('click', prevSlide);
+        navDown.addEventListener('click', nextSlide);
+
+        // Fullscreen button
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        // Help button
+        helpBtn.addEventListener('click', toggleHelp);
+        closeOverlay.addEventListener('click', toggleHelp);
+
+        // Close overlay on escape or click outside
+        keyboardOverlay.addEventListener('click', (e) => {
+            if (e.target === keyboardOverlay) toggleHelp();
+        });
+
+        // Comprehensive keyboard navigation for presentation pointers
         document.addEventListener('keydown', (e) => {
-            const currentIndex = Array.from(dots).findIndex(dot => dot.classList.contains('active'));
-            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+            // Close help overlay on Escape
+            if (e.key === 'Escape') {
+                if (keyboardOverlay.classList.contains('show')) {
+                    toggleHelp();
+                    return;
+                }
+            }
+
+            // Show help
+            if (e.key === '?' || (e.key === '/' && e.shiftKey)) {
                 e.preventDefault();
-                if (currentIndex < slides.length - 1) scrollToSlide(currentIndex + 1);
-            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                toggleHelp();
+                return;
+            }
+
+            // Fullscreen
+            if (e.key === 'f' || e.key === 'F') {
                 e.preventDefault();
-                if (currentIndex > 0) scrollToSlide(currentIndex - 1);
-            } else if (e.key === 'Home') {
+                toggleFullscreen();
+                return;
+            }
+
+            // NEXT SLIDE - Multiple keys for different presenters/clickers
+            if (
+                e.key === 'ArrowDown' ||      // Down arrow
+                e.key === 'ArrowRight' ||     // Right arrow (common for clickers)
+                e.key === 'PageDown' ||       // Page Down (common for clickers)
+                e.key === ' ' ||              // Space bar
+                e.key === 'Enter' ||          // Enter key
+                e.key === 'n' ||              // 'n' for next
+                e.key === 'N'
+            ) {
+                e.preventDefault();
+                nextSlide();
+                return;
+            }
+
+            // PREVIOUS SLIDE - Multiple keys for different presenters/clickers
+            if (
+                e.key === 'ArrowUp' ||        // Up arrow
+                e.key === 'ArrowLeft' ||      // Left arrow (common for clickers)
+                e.key === 'PageUp' ||         // Page Up (common for clickers)
+                e.key === 'Backspace' ||      // Backspace
+                e.key === 'p' ||              // 'p' for previous
+                e.key === 'P'
+            ) {
+                e.preventDefault();
+                prevSlide();
+                return;
+            }
+
+            // First slide
+            if (e.key === 'Home') {
                 e.preventDefault();
                 scrollToSlide(0);
-            } else if (e.key === 'End') {
+                return;
+            }
+
+            // Last slide
+            if (e.key === 'End') {
                 e.preventDefault();
-                scrollToSlide(slides.length - 1);
+                scrollToSlide(totalSlides - 1);
+                return;
+            }
+
+            // Number keys to jump to specific slides (1-9)
+            if (e.key >= '1' && e.key <= '9') {
+                const slideNum = parseInt(e.key) - 1;
+                if (slideNum < totalSlides) {
+                    e.preventDefault();
+                    scrollToSlide(slideNum);
+                }
+                return;
+            }
+
+            // '0' key goes to slide 10
+            if (e.key === '0') {
+                if (9 < totalSlides) {
+                    e.preventDefault();
+                    scrollToSlide(9);
+                }
+                return;
             }
         });
+
+        // Mouse wheel navigation (for trackpad/mouse)
+        let wheelTimeout;
+        container.addEventListener('wheel', (e) => {
+            // Debounce to prevent too fast scrolling
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                if (e.deltaY > 50) {
+                    nextSlide();
+                } else if (e.deltaY < -50) {
+                    prevSlide();
+                }
+            }, 50);
+        }, { passive: true });
+
+        // Touch support for mobile/tablets
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        container.addEventListener('touchstart', (e) => {
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        container.addEventListener('touchend', (e) => {
+            touchEndY = e.changedTouches[0].screenY;
+            const diff = touchStartY - touchEndY;
+            
+            if (Math.abs(diff) > 50) { // Minimum swipe distance
+                if (diff > 0) {
+                    nextSlide(); // Swipe up = next
+                } else {
+                    prevSlide(); // Swipe down = previous
+                }
+            }
+        }, { passive: true });
+
+        // Click anywhere to advance (optional - for presentation mode)
+        // Uncomment the following if you want click-to-advance
+        /*
+        document.addEventListener('click', (e) => {
+            // Don't advance if clicking on interactive elements
+            if (e.target.closest('button, a, .nav-dot, .nav-arrow, .info-card')) return;
+            nextSlide();
+        });
+        */
 
         // Add entrance animations
         const animateOnScroll = new IntersectionObserver((entries) => {
@@ -1723,6 +2343,9 @@
             el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
             animateOnScroll.observe(el);
         });
+
+        // Prevent default scroll behavior for smoother slide transitions
+        container.style.scrollBehavior = 'smooth';
     </script>
 </body>
 </html>
