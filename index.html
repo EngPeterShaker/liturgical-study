@@ -131,8 +131,7 @@
             transition: opacity var(--slide-transition), transform var(--slide-transition), visibility var(--slide-transition);
             display: flex;
             flex-direction: column;
-            padding: 30px 40px 100px 40px;
-            /* Increased bottom padding */
+            padding: 20px 40px;
             box-sizing: border-box;
             background-color: transparent;
             transform: translateY(20px) scale(0.98);
@@ -476,13 +475,12 @@
 
         .content {
             flex: 1;
-            padding: 20px 40px 60px 40px;
-            /* Added more bottom padding to content too */
+            padding: 20px 0 80px 0;
+            /* More balanced padding */
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            justify-content: center;
-            /* Center content vertically if there's space */
+            gap: 25px;
+            width: 100%;
         }
 
         /* Progress Indicator */
@@ -689,7 +687,8 @@
         .story-layout {
             display: flex;
             gap: 40px;
-            align-items: stretch;
+            align-items: flex-start;
+            /* Start from top to prevent top-cutoff */
         }
 
         .image-section {
@@ -881,7 +880,8 @@
         .two-column {
             display: flex;
             gap: 40px;
-            align-items: center;
+            align-items: flex-start;
+            /* Start from top to prevent top-cutoff */
         }
 
         .left-section {
@@ -1400,45 +1400,45 @@
         <!-- ===== SLIDE 2: Spiritual Schizophrenia ===== -->
         <section class="slide slide-content" id="slide-1">
             <div class="header reveal">
-                <h2>أولاً: المقدمة (التشخيص والمدخل)</h2>
+                <h2>أولاً: المقدمة (إحنا فين؟)</h2>
             </div>
 
             <div class="content">
-                <h3 class="section-title reveal">الواقع: متلازمة «الفصام الروحي»</h3>
+                <h3 class="section-title reveal">الواقع: "حياتنا مقسومة نصين"</h3>
 
                 <div class="comparison-container">
                     <div class="comparison-card card-church reveal">
                         <div class="card-header">
                             <div class="card-icon">🏛️</div>
-                            <div class="card-title">في الكنيسة</div>
+                            <div class="card-title">يوم الأحد (في الكنيسة)</div>
                         </div>
                         <ul class="card-points">
-                            <li>خادم ملتهب</li>
-                            <li>شماس متحمس</li>
-                            <li>يشعر بسلام الله</li>
+                            <li>خادم شاطر ومركز</li>
+                            <li>شماس صوته جميل وحاسس بربنا</li>
+                            <li>طاير في السما من الفرحة</li>
                         </ul>
                     </div>
 
                     <div class="comparison-card card-university reveal">
                         <div class="card-header">
                             <div class="card-icon">📚</div>
-                            <div class="card-title">باقي الأسبوع</div>
+                            <div class="card-title">باقي الأسبوع (بره الكنيسة)</div>
                         </div>
                         <ul class="card-points">
-                            <li>طالب «مطحون»</li>
-                            <li>المذاكرة شرٌ لا بد منه</li>
-                            <li>العمل مجرد «أكل عيش»</li>
+                            <li>طالب "مطحون" وتعبان</li>
+                            <li>المذاكرة حمل تقيل وزهق</li>
+                            <li>الشغل مجرد "أكل عيش" وتعب</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="question-box reveal">
-                    <div class="question-text">هل الله موجود في قاعة المحاضرات كما هو موجود في الهيكل؟</div>
+                    <div class="question-text">هو ربنا موجود في قاعة المحاضرات زي ما هو موجود في الكنيسة؟</div>
                 </div>
 
                 <div class="goal-section reveal">
                     <div class="goal-label">
-                        🎯 الهدف: <span>التخلص من الانقسام الروحي</span>
+                        🎯 الهدف: <span>نخلي حياتنا كلها واحدة مع ربنا</span>
                     </div>
                 </div>
             </div>
