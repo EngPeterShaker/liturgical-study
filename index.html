@@ -402,6 +402,45 @@
             background: transparent;
         }
 
+        /* Reveal Animations (PPT Style) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: none;
+            /* Instant reset when hidden */
+        }
+
+        .slide.active .reveal {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .slide.active .reveal:nth-child(1) {
+            transition-delay: 0.2s;
+        }
+
+        .slide.active .reveal:nth-child(2) {
+            transition-delay: 0.4s;
+        }
+
+        .slide.active .reveal:nth-child(3) {
+            transition-delay: 0.6s;
+        }
+
+        .slide.active .reveal:nth-child(4) {
+            transition-delay: 0.8s;
+        }
+
+        .slide.active .reveal:nth-child(5) {
+            transition-delay: 1.0s;
+        }
+
+        /* Handle deeper nesting/more items */
+        .slide.active .reveal .reveal {
+            transition-delay: inherit;
+        }
+
         .header {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -1333,18 +1372,18 @@
             <div class="corner-decoration bottom-left"></div>
 
             <div class="content-wrapper">
-                <h1 class="main-title">لماذا نذاكر؟</h1>
+                <h1 class="main-title reveal">لماذا نذاكر؟</h1>
 
-                <div class="divider">
+                <div class="divider reveal">
                     <div class="divider-line"></div>
                     <div class="divider-star">✦</div>
                     <div class="divider-line"></div>
                 </div>
 
-                <p class="subtitle">مانيفستو الطالب المسيحي</p>
+                <p class="subtitle reveal">مانيفستو الطالب المسيحي</p>
 
                 <div class="info-cards">
-                    <div class="info-card">
+                    <div class="info-card reveal">
                         <div class="icon-circle" style="background: rgba(255, 204, 51, 0.1); color: var(--neon-gold);">✧
                         </div>
                         <div class="card-content">
@@ -1352,7 +1391,7 @@
                             <div class="card-value">ليتورجيا الحياة</div>
                         </div>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card reveal">
                         <div class="icon-circle" style="background: rgba(0, 242, 255, 0.1); color: var(--neon-blue);">✦
                         </div>
                         <div class="card-content">
@@ -1360,7 +1399,7 @@
                             <div class="card-value">قداسة المعرفة</div>
                         </div>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card reveal">
                         <div class="icon-circle"
                             style="background: rgba(188, 19, 254, 0.1); color: var(--neon-purple);">⚛</div>
                         <div class="card-content">
@@ -1384,10 +1423,10 @@
             </div>
 
             <div class="content">
-                <h3 class="section-title">الواقع: متلازمة «الفصام الروحي»</h3>
+                <h3 class="section-title reveal">الواقع: متلازمة «الفصام الروحي»</h3>
 
                 <div class="comparison-container">
-                    <div class="comparison-card card-church">
+                    <div class="comparison-card card-church reveal">
                         <div class="card-header">
                             <div class="card-icon">🏛️</div>
                             <div class="card-title">في الكنيسة</div>
@@ -1399,7 +1438,7 @@
                         </ul>
                     </div>
 
-                    <div class="comparison-card card-university">
+                    <div class="comparison-card card-university reveal">
                         <div class="card-header">
                             <div class="card-icon">📚</div>
                             <div class="card-title">باقي الأسبوع</div>
@@ -1412,11 +1451,11 @@
                     </div>
                 </div>
 
-                <div class="question-box">
+                <div class="question-box reveal">
                     <div class="question-text">هل الله موجود في قاعة المحاضرات كما هو موجود في الهيكل؟</div>
                 </div>
 
-                <div class="goal-section">
+                <div class="goal-section reveal">
                     <div class="goal-label">
                         🎯 الهدف: <span>التخلص من الانقسام الروحي</span>
                     </div>
@@ -1432,7 +1471,7 @@
 
             <div class="content">
                 <div class="story-layout">
-                    <div class="image-section">
+                    <div class="image-section reveal">
                         <div class="image-container">
                             <img src="st-makarious-2.jpg" alt="القديس مقاريوس الكبير"
                                 style="width: 100%; height: 100%; object-fit: cover;">
@@ -1440,7 +1479,7 @@
                     </div>
 
                     <div class="story-section">
-                        <div class="story-step">
+                        <div class="story-step reveal">
                             <div class="step-header">
                                 <span class="step-number">1️⃣</span>
                                 <span class="step-icon">🔊</span>
@@ -1449,7 +1488,7 @@
                             <p class="step-text">«يا مقاريوس، لم تصل بعد إلى درجة امرأتين في المدينة»</p>
                         </div>
 
-                        <div class="story-step">
+                        <div class="story-step reveal">
                             <div class="step-header">
                                 <span class="step-number">2️⃣</span>
                                 <span class="step-icon">🔍</span>
@@ -1459,7 +1498,7 @@
                                 ضجيج المدينة</p>
                         </div>
 
-                        <div class="story-step">
+                        <div class="story-step reveal">
                             <div class="step-header">
                                 <span class="step-number">3️⃣</span>
                                 <span class="step-icon">💡</span>
@@ -1470,7 +1509,7 @@
                     </div>
                 </div>
 
-                <div class="quote-box">
+                <div class="quote-box reveal">
                     <p class="quote-text">«حقاً إن الله لا ينظر إلى زي راهب أو علماني، ولا إلى بتولية أو زواج، بل إلى
                         نية القلب»</p>
                     <p class="quote-author">— القديس مقاريوس الكبير</p>
@@ -1486,7 +1525,7 @@
 
             <div class="content">
                 <div class="two-column">
-                    <div class="left-section">
+                    <div class="left-section reveal">
                         <div class="image-container" style="height: 300px; margin-bottom: 20px;">
                             <img src="church_inhalation.png" alt="Inhalation - Church"
                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
@@ -1511,13 +1550,13 @@
                     </div>
 
                     <div class="right-section">
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">«امضوا بسلام»: الانطلاق</div>
                             <div class="box-text">لا تعني «انتهت الصلاة»، بل تعني: «لقد امتلأت بالنعمة، الآن اذهب وابدأ
                                 ليتورجيا العالم».</div>
                         </div>
 
-                        <div class="quote-box">
+                        <div class="quote-box reveal">
                             <p class="quote-text">«الفقير هو مذبح آخر.. هذا المذبح يمكنك أن تراه في كل مكان، ويمكنك أن
                                 تقديم عليه الذبائح في كل ساعة»</p>
                             <p class="quote-author">— القديس يوحنا ذهبي الفم</p>
@@ -1535,7 +1574,7 @@
 
             <div class="content">
                 <div class="two-column">
-                    <div class="visual-section" style="flex: 0 0 40%;">
+                    <div class="visual-section reveal" style="flex: 0 0 40%;">
                         <div class="illustration">⛺</div>
                         <div class="label">الخيمة</div>
                         <div class="sub-label">الحياة الدراسية</div>
@@ -1546,13 +1585,13 @@
                     </div>
 
                     <div class="right-section">
-                        <div class="quote-box">
+                        <div class="quote-box reveal">
                             <p class="verse-text">«وَنَقَلَ مِنْ هُنَاكَ إِلَى الْجَبَلِ... وَبَنَى هُنَاكَ مَذْبَحًا
                                 لِلرَّبِّ»</p>
                             <p class="verse-ref">(تكوين 12: 8)</p>
                         </div>
 
-                        <div class="application-box">
+                        <div class="application-box reveal">
                             <div class="app-icon">🏔️</div>
                             <div class="app-title">التطبيق</div>
                             <div class="app-text">مكتبك هو المذبح الذي تبنيه بجوار خيمة كليتك</div>
@@ -1577,7 +1616,7 @@
 
             <div class="content">
                 <div class="two-column">
-                    <div class="left-section">
+                    <div class="left-section reveal">
                         <div class="number-circle">1</div>
                         <div class="title-section">
                             <div class="principle-title">الاستمرارية: «عاملان مع الله»</div>
@@ -1591,18 +1630,18 @@
                     </div>
 
                     <div class="right-section">
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">المفهوم</div>
                             <div class="box-text">الله لم يخلق الكون ويتركه، بل هو مستمر في «عناية» تحفظ الوجود</div>
                         </div>
 
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">التطبيق</div>
                             <div class="box-text">المذاكرة هي اشتراك مع الله في صيانة العالم. الطبيب يشارك الله في
                                 الشفاء، والمهندس يشاركه في النظام</div>
                         </div>
 
-                        <div class="quote-box">
+                        <div class="quote-box reveal">
                             <p class="verse-text">«فَإِنَّنَا نَحْنُ عَامِلاَنِ مَعَ اللهِ»</p>
                             <p class="verse-ref">(1 كورنثوس 3: 9)</p>
                             <p class="quote-text">«لو أبعد الله يده النشيطة عن الكون لحظة واحدة، لتداعى كل شيء وفني»</p>
@@ -1630,7 +1669,7 @@
 
             <div class="content">
                 <div class="two-column">
-                    <div class="left-section">
+                    <div class="left-section reveal">
                         <div class="number-circle">2</div>
                         <div class="title-section">
                             <div class="principle-title">الهوية: قراءة «كتاب الطبيعة»</div>
@@ -1644,18 +1683,18 @@
                     </div>
 
                     <div class="right-section">
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">المفهوم</div>
                             <div class="box-text">آدم هو العالم الأول. تكليفه بتسمية الحيوانات كان أول بحث علمي</div>
                         </div>
 
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">التطبيق</div>
                             <div class="box-text">نحن وكلاء (Stewards) لتنمية الخليقة. المذاكرة وسيلة لفهم الله من خلال
                                 مخلوقاته</div>
                         </div>
 
-                        <div class="quote-box">
+                        <div class="quote-box reveal">
                             <p class="verse-text">«وَأَخَذَ الرَّبُّ الإِلهُ آدَمَ وَوَضَعَهُ فِي جَنَّةِ عَدْنٍ
                                 لِيَعْمَلَهَا وَيَحْفَظَهَا»</p>
                             <p class="verse-ref">(تكوين 2: 15)</p>
@@ -1683,7 +1722,7 @@
 
             <div class="content">
                 <div class="two-column">
-                    <div class="left-section">
+                    <div class="left-section reveal">
                         <div class="number-circle">3</div>
                         <div class="title-section">
                             <div class="principle-title">التواضع: درس «صناعة الخيام»</div>
@@ -1698,23 +1737,23 @@
                     </div>
 
                     <div class="right-section">
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">المشكلة</div>
                             <div class="box-text">كبرياء الجامعة: «أنا دكتور/مهندس» — التمركز حول الذات</div>
                         </div>
 
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">القدوة العظمى (يسوع النجار)</div>
                             <div class="box-text">رب المجد قضى 30 سنة يعمل نجاراً بيده — «أليس هذا هو النجار؟»</div>
                         </div>
 
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">القدوة الرسولية (بولس)</div>
                             <div class="box-text">الفيلسوف الكبير كان يعمل «صانع خيام» بيده — لم يخجل من العمل اليدوي
                             </div>
                         </div>
 
-                        <div class="quote-box">
+                        <div class="quote-box reveal">
                             <p class="quote-text">«بولس، معلم المسكونة... لم يخجل من أن يمسك الجلد والمقص ويخيط الخيام..
                                 ليعلمنا أن البطالة هي معلمة كل الشرور»</p>
                             <p class="quote-author">— القديس يوحنا ذهبي الفم</p>
@@ -1739,7 +1778,7 @@
 
             <div class="content">
                 <div class="two-column">
-                    <div class="left-section">
+                    <div class="left-section reveal">
                         <div class="number-circle">4</div>
                         <div class="title-section">
                             <div class="principle-title">التميز: الأمانة قبل النتيجة</div>
@@ -1755,19 +1794,19 @@
                     </div>
 
                     <div class="right-section">
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">المبدأ</div>
                             <div class="box-text">الله لا يطلب «النجاح الدائم» (الدرجات)، بل يطلب «الأمانة المطلقة»
                                 (الجهد)</div>
                         </div>
 
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">التطبيق</div>
                             <div class="box-text">النتيجة بين يدي الله، لكن الجهد مطلوب منك. كن نموذجاً في كل شيء بلا
                                 كسل أو تهاون</div>
                         </div>
 
-                        <div class="quote-box">
+                        <div class="quote-box reveal">
                             <p class="verse-text">«لأَنَّ اللهَ لَيْسَ بِظَالِمٍ حَتَّى يَنْسَى عَمَلَكُمْ وَتَعَبَ
                                 الْمَحَبَّةِ»</p>
                             <p class="verse-ref">(عبرانيين 6: 10)</p>
@@ -1795,7 +1834,7 @@
 
             <div class="content">
                 <div class="two-column">
-                    <div class="left-section">
+                    <div class="left-section reveal">
                         <div class="number-circle">5</div>
                         <div class="title-section">
                             <div class="principle-title">نفسية الطالب: الانتصار على الملل</div>
@@ -1810,19 +1849,19 @@
                     </div>
 
                     <div class="right-section">
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">المشكلة: خطورة الفراغ</div>
                             <div class="box-text">الفراغ هو "ملعب الشيطان"؛ لما بنبطل ننتج، بنفتح الباب للأرق، القلق،
                                 والأفكار اللي بتتعبنا نفسياً.</div>
                         </div>
 
-                        <div class="content-box">
+                        <div class="content-box reveal">
                             <div class="box-label">الحل: الشغل "حماية"</div>
                             <div class="box-text">المذاكرة المخلصة بتملى يومك بالمعنى وبتحمي عقلك. زي نصيحة الملاك
                                 للأنبا أنطونيوس: "اشتغل عشان تستريح".</div>
                         </div>
 
-                        <div class="quote-box">
+                        <div class="quote-box reveal">
                             <p class="quote-text">«الراهب الذي يعمل يهاجمه شيطان واحد، أما الراهب العاطل فتعبث به شياطين
                                 لا حصر لها»</p>
                             <p class="quote-author">— القديس يوحنا كاسيان</p>
@@ -1839,24 +1878,25 @@
             </div>
 
             <div class="content">
-                <div class="section-title" style="margin-bottom: 20px;">تاريخنا يثبت أن العلم كان دائماً خادماً للإيمان
+                <div class="section-title reveal" style="margin-bottom: 20px;">تاريخنا يثبت أن العلم كان دائماً خادماً
+                    للإيمان
                 </div>
 
                 <div class="scientists-grid">
-                    <div class="scientist-card">
+                    <div class="scientist-card reveal">
                         <div class="scientist-title">مدرسة الإسكندرية</div>
                         <div class="scientist-name">القديس بنتينوس</div>
                         <div class="scientist-description">ترك كرسيه الأكاديمي ليقود الكرازة في الهند بعقله الفلسفي
                         </div>
                     </div>
 
-                    <div class="scientist-card">
+                    <div class="scientist-card reveal">
                         <div class="scientist-title">غريغور مندل</div>
                         <div class="scientist-name">الراهب العالم</div>
                         <div class="scientist-description">اكتشف قوانين الوراثة في حديقة ديره</div>
                     </div>
 
-                    <div class="scientist-card">
+                    <div class="scientist-card reveal">
                         <div class="scientist-title">لويس باستير</div>
                         <div class="scientist-name">العالم المؤمن</div>
                         <div class="scientist-description">«القليل من العلم يبعدك عن الله، ولكن الكثير منه يعيدك إليه»
@@ -1864,7 +1904,7 @@
                     </div>
                 </div>
 
-                <div class="featured-card">
+                <div class="featured-card reveal">
                     <div style="font-size: 50px;">💚</div>
                     <div class="featured-content">
                         <div class="featured-name">د. مجدي يعقوب — المعاصر</div>
@@ -1882,22 +1922,23 @@
 
             <div class="content">
                 <div class="two-column">
-                    <div class="left-section">
+                    <div class="left-section reveal">
                         <div class="image-container" style="height: 350px;">
                             <img src="study_desk_cross.jpg" alt="Study Desk with Cross"
                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px; border: 1px solid var(--neon-gold);">
                         </div>
                     </div>
                     <div class="right-section">
-                        <div class="section-title" style="text-align: right; margin-bottom: 15px;">الوصية العملية</div>
+                        <div class="section-title reveal" style="text-align: right; margin-bottom: 15px;">الوصية العملية
+                        </div>
                         <div class="action-steps" style="grid-template-columns: 1fr; gap: 15px;">
-                            <div class="action-card" style="padding: 20px;">
+                            <div class="action-card reveal" style="padding: 20px;">
                                 <div class="action-title">البيئة المقدسة</div>
                                 <div class="action-description">ضع صليباً صغيراً على مكتبك لتتذكر أنه مكان مقدس للشركة
                                     مع الله.</div>
                             </div>
 
-                            <div class="action-card" style="padding: 20px;">
+                            <div class="action-card reveal" style="padding: 20px;">
                                 <div class="action-title">الصلاة العاملة</div>
                                 <div class="prayer-box" style="margin-top: 10px; padding: 15px;">
                                     <p class="prayer-text">«يا رب، اقبل تعبي كذبيحة حب، واستخدمني كشريك في عملك لبنيان
@@ -1906,7 +1947,7 @@
                             </div>
                         </div>
 
-                        <div class="final-quote-box" style="margin-top: 15px; padding: 25px;">
+                        <div class="final-quote-box reveal" style="margin-top: 15px; padding: 25px;">
                             <p class="final-quote-text" style="font-size: 22px;">«المذاكرة ليست عبودية للمجموع... هي
                                 رسالة، ووكالة، وشركة مع الله»</p>
                         </div>
