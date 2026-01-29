@@ -2442,6 +2442,11 @@
                 unrevealed[0].classList.add('visible');
             } else if (currentIndex < totalSlides - 1) {
                 scrollToSlide(currentIndex + 1);
+                // Auto-reveal the first item of the new slide (Title/Header)
+                const newSlideReveals = slides[currentIndex].querySelectorAll('.reveal');
+                if (newSlideReveals.length > 0) {
+                    newSlideReveals[0].classList.add('visible');
+                }
             }
         }
 
@@ -2652,36 +2657,16 @@
         });
         */
 
-        // Cinematic entrance animations on slide change
-        function triggerSlideAnimations(slide) {
-            const animatable = slide.querySelectorAll('.content-box, .story-step, .comparison-card, .scientist-card, .action-card, .info-card');
-            animatable.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px) scale(0.95)';
-                el.style.transition = 'none';
-
-                setTimeout(() => {
-                    el.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0) scale(1)';
-                }, 100 + (index * 150));
-            });
+        // Cinematic initial entrance for first slide
+        const firstSlide = slides[0];
+        const firstReveals = firstSlide.querySelectorAll('.reveal');
+        if (firstReveals.length > 0) {
+            setTimeout(() => firstReveals[0].classList.add('visible'), 500);
         }
-
-        // Hook trigger into scrollToSlide
-        const originalScrollToSlide = scrollToSlide;
-        scrollToSlide = function (index) {
-            originalScrollToSlide(index);
-            triggerSlideAnimations(slides[index]);
-        };
-
-        // Initial trigger
-        triggerSlideAnimations(slides[0]);
 
         // Prevent default scroll behavior
         document.addEventListener('wheel', (e) => {
             if (e.ctrlKey) return; // Allow zooming
-            // e.preventDefault(); // This can be risky, keeping trackpad swipe
         }, { passive: true });
     </script>
 </body>
