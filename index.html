@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لماذا نذاكر؟ - مانيفستو الطالب المسيحي</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Marhey:wght@300..700&family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --navy: #1E2A4A;
-            --navy-light: #2a3a5a;
-            --gold: #C9A227;
-            --gold-light: #d4b54a;
-            --cream: #F5F1E8;
-            --text-dark: #2D3748;
-            --text-light: #FAFAF9;
-            --sage: #6B8E6B;
-            --burgundy: #722F37;
-            --shadow: rgba(0, 0, 0, 0.15);
+            --bg-dark: #05070a;
+            --bg-glass: rgba(10, 15, 25, 0.7);
+            --neon-gold: #ffcc33;
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+            --text-main: #e0e6ed;
+            --text-dim: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-glow: rgba(255, 204, 51, 0.4);
+            --slide-transition: 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
 
         * {
@@ -32,10 +33,39 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #0d1b2a 0%, var(--navy) 50%, #000 100%);
-            color: var(--text-light);
-            overflow-x: hidden;
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Ambient Background */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255, 204, 51, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 242, 255, 0.05) 0%, transparent 40%);
+            opacity: 0.6;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
         }
 
         /* Navigation */
@@ -51,53 +81,84 @@
         }
 
         .nav-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: rgba(201, 162, 39, 0.3);
-            border: 2px solid var(--gold);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .nav-dot:hover, .nav-dot.active {
-            background: var(--gold);
-            transform: scale(1.3);
-            box-shadow: 0 0 15px rgba(201, 162, 39, 0.5);
+        .nav-dot:hover,
+        .nav-dot.active {
+            background: var(--neon-gold);
+            transform: scale(1.5);
+            box-shadow: 0 0 15px var(--neon-gold);
+            border-color: var(--neon-gold);
         }
 
         .nav-dot[data-tooltip]:hover::after {
             content: attr(data-tooltip);
             position: absolute;
             left: 25px;
-            background: var(--navy);
-            color: var(--gold);
+            background: var(--bg-dark);
+            color: var(--neon-gold);
             padding: 5px 12px;
             border-radius: 5px;
             font-size: 12px;
             white-space: nowrap;
-            border: 1px solid var(--gold);
+            border: 1px solid var(--neon-gold);
         }
 
         /* Slide Container */
+        /* Slides Management */
         .slides-container {
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
+            position: relative;
+            width: 100vw;
             height: 100vh;
+            overflow: hidden;
         }
 
         .slide {
-            min-height: 100vh;
-            scroll-snap-align: start;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--slide-transition), transform var(--slide-transition), visibility var(--slide-transition);
             display: flex;
             flex-direction: column;
-            position: relative;
-            overflow: hidden;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            background-color: transparent;
+            transform: translateY(20px) scale(0.98);
+            overflow-y: auto;
+            /* Allow internal scroll if content overflows */
+            scrollbar-width: none;
+            /* Hide scrollbar for cleaner look */
+        }
+
+        .slide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            transform: translateY(-20px) scale(1.02);
+            opacity: 0;
         }
 
         /* ===== SLIDE 1: Title ===== */
         .slide-title {
-            background: linear-gradient(135deg, #0d1b2a 0%, var(--navy) 50%, #000 100%);
             justify-content: center;
             align-items: center;
             text-align: center;
@@ -108,29 +169,61 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 300px;
-            color: var(--gold);
-            opacity: 0.06;
+            font-size: 30vw;
+            color: var(--neon-gold);
+            opacity: 0.03;
             z-index: 0;
-            animation: pulse-glow 4s ease-in-out infinite;
+            filter: blur(2px);
+            animation: pulse-glow 8s ease-in-out infinite;
         }
 
         @keyframes pulse-glow {
-            0%, 100% { opacity: 0.06; }
-            50% { opacity: 0.1; }
+
+            0%,
+            100% {
+                opacity: 0.06;
+            }
+
+            50% {
+                opacity: 0.1;
+            }
         }
 
         .corner-decoration {
             position: absolute;
             width: 100px;
             height: 100px;
-            border: 2px solid rgba(201, 162, 39, 0.25);
+            border: 1px solid var(--neon-gold);
+            opacity: 0.3;
         }
 
-        .top-right { top: 40px; right: 40px; border-left: none; border-bottom: none; }
-        .top-left { top: 40px; left: 40px; border-right: none; border-bottom: none; }
-        .bottom-right { bottom: 40px; right: 40px; border-left: none; border-top: none; }
-        .bottom-left { bottom: 40px; left: 40px; border-right: none; border-top: none; }
+        .top-right {
+            top: 40px;
+            right: 40px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .top-left {
+            top: 40px;
+            left: 40px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .bottom-right {
+            bottom: 40px;
+            right: 40px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .bottom-left {
+            bottom: 40px;
+            left: 40px;
+            border-right: none;
+            border-top: none;
+        }
 
         .content-wrapper {
             position: relative;
@@ -140,18 +233,25 @@
         }
 
         .main-title {
-            font-family: 'Cairo', sans-serif;
-            font-size: 90px;
-            font-weight: 900;
-            color: var(--gold);
+            font-family: 'Marhey', cursive;
+            font-size: clamp(40px, 8vw, 120px);
+            font-weight: 700;
+            color: var(--neon-gold);
             margin-bottom: 10px;
-            text-shadow: 0 4px 30px rgba(201, 162, 39, 0.4);
-            animation: title-entrance 1s ease-out;
+            text-shadow: 0 0 30px var(--accent-glow);
+            animation: title-entrance 1.2s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         @keyframes title-entrance {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .divider {
@@ -164,24 +264,29 @@
         .divider-line {
             width: 120px;
             height: 2px;
-            background: linear-gradient(to left, transparent, var(--gold), transparent);
+            background: linear-gradient(to left, transparent, var(--neon-gold), transparent);
         }
 
         .divider-star {
             font-size: 28px;
-            color: var(--gold);
+            color: var(--neon-gold);
             margin: 0 25px;
             animation: star-spin 8s linear infinite;
         }
 
         @keyframes star-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .subtitle {
             font-size: 32px;
-            color: var(--cream);
+            color: var(--text-main);
             font-weight: 300;
             margin-bottom: 60px;
             letter-spacing: 1px;
@@ -195,39 +300,55 @@
         }
 
         .info-card {
-            background: rgba(245, 241, 232, 0.08);
-            border: 1px solid rgba(201, 162, 39, 0.35);
-            border-radius: 16px;
-            padding: 28px 35px;
-            min-width: 280px;
+            background: var(--bg-glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px 30px;
+            min-width: 260px;
             display: flex;
             align-items: center;
             gap: 18px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
+            transition: all 0.5s var(--slide-transition);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
         .info-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(201, 162, 39, 0.2);
-            border-color: var(--gold);
+            transform: translateY(-10px);
+            border-color: var(--neon-gold);
+            box-shadow: 0 15px 40px rgba(255, 204, 51, 0.15);
         }
 
         .icon-circle {
             width: 55px;
             height: 55px;
-            background: linear-gradient(135deg, rgba(201, 162, 39, 0.3) 0%, rgba(201, 162, 39, 0.1) 100%);
+            background: rgba(255, 204, 51, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 26px;
             flex-shrink: 0;
+            color: var(--neon-gold);
         }
 
-        .card-content { text-align: right; }
-        .card-label { font-size: 14px; color: var(--gold); font-weight: 600; margin-bottom: 5px; letter-spacing: 1px; }
-        .card-value { font-size: 20px; color: var(--text-light); font-weight: 700; }
+        .card-content {
+            text-align: right;
+        }
+
+        .card-label {
+            font-size: 14px;
+            color: var(--neon-gold);
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .card-value {
+            font-size: 20px;
+            color: var(--text-main);
+            font-weight: 700;
+        }
 
         .scroll-indicator {
             position: absolute;
@@ -243,42 +364,67 @@
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-15px); }
-            60% { transform: translateX(-50%) translateY(-8px); }
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            40% {
+                transform: translateX(-50%) translateY(-15px);
+            }
+
+            60% {
+                transform: translateX(-50%) translateY(-8px);
+            }
         }
 
         .scroll-indicator span {
             font-size: 14px;
-            color: var(--gold);
+            color: var(--neon-gold);
             opacity: 0.7;
         }
 
         .scroll-arrow {
             width: 30px;
             height: 30px;
-            border-left: 2px solid var(--gold);
-            border-bottom: 2px solid var(--gold);
+            border-left: 2px solid var(--neon-gold);
+            border-bottom: 2px solid var(--neon-gold);
             transform: rotate(-45deg);
             opacity: 0.7;
         }
 
         /* ===== Content Slides Common ===== */
         .slide-content {
-            background: var(--cream);
-            color: var(--text-dark);
+            background: transparent;
         }
 
         .header {
-            background: linear-gradient(to left, var(--navy) 0%, var(--navy-light) 100%);
-            min-height: 90px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 70px;
-            border-bottom: 5px solid var(--gold);
+            padding: 0 40px;
+            border-bottom: 1px solid var(--glass-border);
+            border-radius: 20px;
+            margin-bottom: 20px;
             position: relative;
-            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 10%;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-gold), transparent);
         }
 
         .header::before {
@@ -293,25 +439,32 @@
         }
 
         @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         .header h2 {
-            font-family: 'Cairo', sans-serif;
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--text-light);
+            font-family: 'Marhey', cursive;
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--neon-gold);
             position: relative;
             z-index: 1;
         }
 
         .content {
             flex: 1;
-            padding: 45px 70px;
+            padding: 20px 40px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
+            justify-content: center;
+            /* Center content vertically if space permits */
         }
 
         /* Progress Indicator */
@@ -331,29 +484,37 @@
         }
 
         .progress-item:hover {
-            color: var(--sage);
+            color: var(--neon-blue);
             transform: scale(1.1);
         }
 
         .progress-item.active {
-            color: var(--gold);
+            color: var(--neon-gold);
             font-size: 36px;
             text-shadow: 0 0 20px rgba(201, 162, 39, 0.6);
             animation: active-pulse 1.5s ease-in-out infinite;
         }
 
         @keyframes active-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
         }
 
         /* Section Title */
         .section-title {
-            font-family: 'Cairo', sans-serif;
-            font-size: 30px;
-            color: var(--navy);
-            font-weight: 700;
+            font-family: 'Marhey', cursive;
+            font-size: 28px;
+            color: var(--text-main);
+            font-weight: 400;
             text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
 
         /* Comparison Cards */
@@ -365,13 +526,13 @@
 
         .comparison-card {
             flex: 1;
-            max-width: 400px;
-            padding: 35px 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px var(--shadow);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            max-width: 450px;
+            padding: 25px;
+            border-radius: 24px;
+            background: var(--bg-glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            transition: all 0.5s var(--slide-transition);
         }
 
         .comparison-card::before {
@@ -381,7 +542,7 @@
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
         }
 
         .comparison-card:hover {
@@ -390,11 +551,13 @@
         }
 
         .card-church {
-            background: linear-gradient(135deg, var(--sage) 0%, #4a6a4a 100%);
+            background: rgba(0, 242, 255, 0.05);
+            border: 1px solid var(--neon-blue);
         }
 
         .card-university {
-            background: linear-gradient(135deg, var(--burgundy) 0%, #5a2029 100%);
+            background: rgba(188, 19, 254, 0.05);
+            border: 1px solid var(--neon-purple);
         }
 
         .card-header {
@@ -403,21 +566,27 @@
             gap: 15px;
             margin-bottom: 25px;
             padding-bottom: 18px;
-            border-bottom: 2px solid rgba(255,255,255,0.25);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.25);
         }
 
-        .card-icon { font-size: 48px; }
+        .card-icon {
+            font-size: 48px;
+        }
+
         .card-title {
             font-family: 'Cairo', sans-serif;
             font-size: 28px;
             font-weight: 700;
-            color: var(--text-light);
+            color: var(--text-main);
         }
 
-        .card-points { list-style: none; }
+        .card-points {
+            list-style: none;
+        }
+
         .card-points li {
             font-size: 22px;
-            color: var(--text-light);
+            color: var(--text-main);
             margin-bottom: 15px;
             padding-right: 30px;
             position: relative;
@@ -428,20 +597,20 @@
             content: '◆';
             position: absolute;
             right: 0;
-            color: var(--gold);
+            color: var(--neon-gold);
             font-size: 14px;
         }
 
         /* Question Box */
         .question-box {
-            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-            border: 3px solid var(--gold);
-            border-radius: 20px;
-            padding: 35px 50px;
+            background: var(--bg-glass);
+            border: 1px solid var(--neon-gold);
+            border-radius: 24px;
+            padding: 40px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(201, 162, 39, 0.25);
+            box-shadow: 0 0 30px rgba(255, 204, 51, 0.1);
             position: relative;
-            overflow: hidden;
+            backdrop-filter: blur(20px);
         }
 
         .question-box::before {
@@ -457,36 +626,46 @@
             font-family: 'Cairo', sans-serif;
             font-size: 28px;
             font-weight: 700;
-            color: var(--gold);
+            color: var(--neon-gold);
             line-height: 1.6;
             position: relative;
             z-index: 1;
         }
 
         /* Goal Badge */
-        .goal-section { text-align: center; margin-top: 15px; }
+        .goal-section {
+            text-align: center;
+            margin-top: 15px;
+        }
+
         .goal-label {
             display: inline-flex;
             align-items: center;
             gap: 12px;
             background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.05) 100%);
-            border: 2px solid var(--gold);
+            border: 2px solid var(--neon-gold);
             border-radius: 30px;
             padding: 15px 40px;
             font-size: 22px;
-            color: var(--navy);
+            color: var(--bg-dark);
             font-weight: 600;
             transition: all 0.3s ease;
         }
 
         .goal-label:hover {
-            background: var(--gold);
-            color: var(--navy);
+            background: var(--neon-gold);
+            color: var(--bg-dark);
             transform: scale(1.05);
         }
 
-        .goal-label span { color: var(--gold); font-weight: 700; }
-        .goal-label:hover span { color: var(--navy); }
+        .goal-label span {
+            color: var(--neon-gold);
+            font-weight: 700;
+        }
+
+        .goal-label:hover span {
+            color: var(--bg-dark);
+        }
 
         /* Story Steps */
         .story-layout {
@@ -514,16 +693,25 @@
         .image-placeholder {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            background: var(--bg-glass);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--gold);
+            color: var(--neon-gold);
+            backdrop-filter: blur(10px);
         }
 
-        .image-placeholder .icon { font-size: 80px; margin-bottom: 15px; opacity: 0.8; }
-        .image-placeholder .label { font-size: 18px; opacity: 0.6; }
+        .image-placeholder .icon {
+            font-size: 80px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .image-placeholder .label {
+            font-size: 18px;
+            opacity: 0.6;
+        }
 
         .story-section {
             flex: 1;
@@ -533,14 +721,14 @@
         }
 
         .story-step {
-            background: #fff;
-            border-radius: 16px;
-            padding: 22px 28px;
-            box-shadow: 0 5px 20px var(--shadow);
-            border-right: 5px solid var(--gold);
-            transition: all 0.3s ease;
+            background: var(--bg-glass);
+            border-radius: 20px;
+            padding: 25px 30px;
+            border: 1px solid var(--glass-border);
+            border-right: 4px solid var(--neon-gold);
+            transition: all 0.4s var(--slide-transition);
+            backdrop-filter: blur(10px);
             position: relative;
-            overflow: hidden;
         }
 
         .story-step::before {
@@ -554,8 +742,15 @@
             transition: width 0.4s ease;
         }
 
-        .story-step:hover::before { width: 100%; }
-        .story-step:hover { transform: translateX(-5px); }
+        .story-step:hover::before {
+            width: 100%;
+        }
+
+        .story-step:hover {
+            transform: translateX(-10px);
+            border-color: var(--neon-gold);
+            box-shadow: 0 0 20px rgba(255, 204, 51, 0.1);
+        }
 
         .step-header {
             display: flex;
@@ -567,84 +762,58 @@
         .step-number {
             font-size: 28px;
             font-weight: 800;
-            color: var(--gold);
+            color: var(--neon-gold);
         }
 
-        .step-icon { font-size: 24px; }
+        .step-icon {
+            font-size: 24px;
+        }
+
         .step-title {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Marhey', cursive;
             font-size: 22px;
-            font-weight: 700;
-            color: var(--navy);
+            font-weight: 400;
+            color: var(--neon-gold);
         }
 
         .step-text {
-            font-size: 20px;
-            color: #4a5568;
+            font-size: 18px;
+            color: var(--text-main);
             line-height: 1.6;
-            padding-right: 10px;
         }
 
         /* Quote Box */
         .quote-box {
-            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-            border: 3px solid var(--gold);
-            border-radius: 16px;
-            padding: 28px 35px;
+            background: var(--bg-glass);
+            border: 1px solid var(--glass-border);
+            border-right: 4px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 30px 40px;
             position: relative;
-            box-shadow: 0 10px 40px rgba(201, 162, 39, 0.2);
-            overflow: hidden;
-        }
-
-        .quote-box::before {
-            content: '«';
-            position: absolute;
-            top: -15px;
-            right: 20px;
-            font-size: 80px;
-            color: var(--gold);
-            font-weight: 700;
-            opacity: 0.15;
-            font-family: 'Amiri', serif;
-        }
-
-        .quote-box::after {
-            content: '»';
-            position: absolute;
-            bottom: -30px;
-            left: 20px;
-            font-size: 80px;
-            color: var(--gold);
-            font-weight: 700;
-            opacity: 0.15;
-            font-family: 'Amiri', serif;
+            backdrop-filter: blur(15px);
         }
 
         .quote-text {
             font-family: 'Amiri', serif;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 400;
-            color: var(--text-light);
-            line-height: 1.7;
+            color: var(--text-main);
+            line-height: 1.8;
             margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
         }
 
         .quote-author {
             font-size: 16px;
-            color: var(--gold);
+            color: var(--neon-blue);
             font-style: italic;
             text-align: left;
-            position: relative;
-            z-index: 1;
         }
 
         .verse-text {
             font-family: 'Amiri', serif;
             font-size: 22px;
             font-weight: 700;
-            color: var(--gold);
+            color: var(--neon-gold);
             line-height: 1.6;
             margin-bottom: 10px;
             position: relative;
@@ -660,38 +829,33 @@
 
         /* Content Box */
         .content-box {
-            background: #fff;
-            border-radius: 16px;
-            padding: 24px 30px;
-            box-shadow: 0 5px 20px var(--shadow);
-            border-right: 5px solid var(--gold);
-            transition: all 0.3s ease;
+            background: var(--bg-glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px 35px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s var(--slide-transition);
         }
 
         .content-box:hover {
-            transform: translateX(-5px);
-            box-shadow: 0 8px 30px var(--shadow);
+            transform: scale(1.02);
+            border-color: var(--neon-gold);
         }
 
         .box-label {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Marhey', cursive;
             font-size: 20px;
-            font-weight: 700;
-            color: var(--navy);
+            font-weight: 400;
+            color: var(--neon-gold);
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .box-label::before {
-            content: '◈';
-            color: var(--gold);
-        }
-
         .box-text {
-            font-size: 20px;
-            color: #4a5568;
+            font-size: 18px;
+            color: var(--text-main);
             line-height: 1.7;
         }
 
@@ -719,50 +883,59 @@
 
         /* Number Circle */
         .number-circle {
-            width: 110px;
-            height: 110px;
-            background: linear-gradient(135deg, var(--gold) 0%, #a88620 100%);
+            width: 100px;
+            height: 100px;
+            background: var(--bg-glass);
+            border: 1px solid var(--neon-gold);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Cairo', sans-serif;
-            font-size: 60px;
-            font-weight: 900;
-            color: var(--text-light);
-            box-shadow: 0 10px 40px rgba(201, 162, 39, 0.5);
+            font-family: 'Marhey', cursive;
+            font-size: 50px;
+            font-weight: 500;
+            color: var(--neon-gold);
+            box-shadow: 0 0 20px var(--accent-glow);
             position: relative;
+            backdrop-filter: blur(10px);
         }
 
         .number-circle::after {
             content: '';
             position: absolute;
             inset: -8px;
-            border: 2px dashed var(--gold);
+            border: 2px dashed var(--neon-gold);
             border-radius: 50%;
             opacity: 0.5;
             animation: rotate-border 10s linear infinite;
         }
 
         @keyframes rotate-border {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .title-section { text-align: center; }
+        .title-section {
+            text-align: center;
+        }
 
         .principle-title {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Marhey', cursive;
             font-size: 32px;
-            font-weight: 700;
-            color: var(--gold);
+            font-weight: 400;
+            color: var(--neon-gold);
             line-height: 1.4;
             margin-bottom: 10px;
         }
 
         .principle-subtitle {
             font-size: 22px;
-            color: var(--sage);
+            color: var(--neon-blue);
             font-weight: 500;
             font-style: italic;
         }
@@ -779,7 +952,7 @@
         .breath-box {
             flex: 1;
             max-width: 280px;
-            border: 2px solid var(--gold);
+            border: 2px solid var(--neon-gold);
             border-radius: 16px;
             padding: 25px 30px;
             text-align: center;
@@ -791,30 +964,53 @@
             transform: scale(1.05);
         }
 
-        .breath-box.church { background: linear-gradient(135deg, var(--sage) 0%, #4a6a4a 100%); }
-        .breath-box.world { background: linear-gradient(135deg, var(--burgundy) 0%, #5a2029 100%); }
+        .breath-box.church {
+            background: linear-gradient(135deg, var(--neon-blue) 0%, #4a6a4a 100%);
+        }
+
+        .breath-box.world {
+            background: linear-gradient(135deg, var(--neon-purple) 0%, #5a2029 100%);
+        }
 
         .breath-title {
             font-family: 'Cairo', sans-serif;
             font-size: 22px;
             font-weight: 700;
-            color: var(--text-light);
+            color: var(--text-main);
             margin-bottom: 18px;
         }
 
-        .breath-items { display: flex; flex-direction: column; gap: 10px; }
-        .breath-item { font-size: 20px; color: var(--text-light); font-weight: 500; }
+        .breath-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .breath-item {
+            font-size: 20px;
+            color: var(--text-main);
+            font-weight: 500;
+        }
 
         .arrows {
             font-size: 50px;
-            color: var(--gold);
+            color: var(--neon-gold);
             font-weight: 700;
             animation: pulse-arrows 1.5s ease-in-out infinite;
         }
 
         @keyframes pulse-arrows {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
         }
 
         /* Visual Section with Icons */
@@ -832,37 +1028,48 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .label {
             font-family: 'Cairo', sans-serif;
             font-size: 24px;
             font-weight: 700;
-            color: var(--navy);
+            color: var(--bg-dark);
         }
 
         .sub-label {
             font-size: 18px;
-            color: var(--sage);
+            color: var(--neon-blue);
             font-weight: 500;
         }
 
         /* Application Box */
         .application-box {
             background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.05) 100%);
-            border: 3px solid var(--gold);
+            border: 3px solid var(--neon-gold);
             border-radius: 16px;
             padding: 30px 35px;
         }
 
-        .app-icon { font-size: 40px; margin-bottom: 15px; }
+        .app-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
         .app-title {
             font-family: 'Cairo', sans-serif;
             font-size: 26px;
             font-weight: 700;
-            color: var(--gold);
+            color: var(--neon-gold);
             margin-bottom: 15px;
         }
 
@@ -870,7 +1077,7 @@
             font-family: 'Cairo', sans-serif;
             font-size: 24px;
             font-weight: 600;
-            color: var(--navy);
+            color: var(--bg-dark);
             line-height: 1.7;
         }
 
@@ -882,85 +1089,69 @@
         }
 
         .scientist-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 25px 28px;
-            box-shadow: 0 5px 20px var(--shadow);
-            border-top: 5px solid var(--gold);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            background: var(--bg-glass);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            border-top: 3px solid var(--neon-gold);
+            transition: all 0.5s var(--slide-transition);
+            backdrop-filter: blur(10px);
         }
 
-        .scientist-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(180deg, transparent 70%, rgba(201, 162, 39, 0.1) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .scientist-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-gold);
+            box-shadow: 0 10px 30px rgba(255, 204, 51, 0.1);
         }
 
-        .scientist-card:hover::before { opacity: 1; }
-        .scientist-card:hover { transform: translateY(-8px); }
-
-        .scientist-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .scientist-icon { font-size: 32px; }
         .scientist-title {
-            font-family: 'Cairo', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--navy);
+            font-family: 'Marhey', cursive;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--neon-gold);
         }
 
-        .scientist-subtitle { font-size: 16px; color: var(--sage); font-weight: 600; margin-bottom: 8px; }
         .scientist-name {
-            font-family: 'Cairo', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--gold);
+            font-family: 'Marhey', cursive;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-main);
             margin-bottom: 10px;
         }
 
-        .scientist-description { font-size: 18px; color: #4a5568; line-height: 1.6; }
+        .scientist-description {
+            font-size: 16px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
 
         /* Featured Card */
         .featured-card {
-            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-            border: 3px solid var(--gold);
-            border-radius: 20px;
-            padding: 30px 40px;
+            background: var(--bg-glass);
+            border: 1px solid var(--neon-gold);
+            border-radius: 24px;
+            padding: 35px;
             display: flex;
             align-items: center;
             gap: 30px;
-            box-shadow: 0 10px 40px rgba(201, 162, 39, 0.25);
-            transition: all 0.3s ease;
+            margin-top: 30px;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s var(--slide-transition);
         }
 
-        .featured-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 50px rgba(201, 162, 39, 0.35);
-        }
-
-        .featured-icon { font-size: 60px; }
         .featured-name {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Marhey', cursive;
             font-size: 26px;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--neon-gold);
+            margin-bottom: 5px;
         }
 
-        .featured-description { font-size: 22px; color: var(--text-light); line-height: 1.6; }
+        .featured-description {
+            font-size: 20px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
 
         /* Action Steps */
         .action-steps {
@@ -970,113 +1161,151 @@
         }
 
         .action-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 30px 35px;
-            box-shadow: 0 8px 30px var(--shadow);
-            border-right: 5px solid var(--gold);
-            transition: all 0.4s ease;
+            background: var(--bg-glass);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            border-right: 4px solid var(--neon-blue);
+            backdrop-filter: blur(15px);
+            transition: all 0.5s var(--slide-transition);
         }
 
-        .action-card:hover {
-            transform: translateY(-5px) translateX(-5px);
-            box-shadow: 0 15px 45px var(--shadow);
-        }
-
-        .action-number { font-size: 36px; font-weight: 700; color: var(--gold); margin-bottom: 15px; }
         .action-title {
-            font-family: 'Cairo', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--navy);
+            font-family: 'Marhey', cursive;
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--neon-blue);
             margin-bottom: 15px;
         }
 
-        .action-description { font-size: 20px; color: #4a5568; line-height: 1.6; }
+        .action-description {
+            font-size: 18px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
 
         .prayer-box {
-            background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.05) 100%);
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            padding: 20px 25px;
+            background: rgba(0, 242, 255, 0.05);
+            border: 1px dashed var(--neon-blue);
+            border-radius: 16px;
+            padding: 20px;
             text-align: center;
             margin-top: 15px;
         }
 
         .prayer-text {
             font-family: 'Amiri', serif;
-            font-size: 20px;
-            color: var(--navy);
+            font-size: 18px;
+            color: var(--text-main);
             line-height: 1.7;
             font-style: italic;
         }
 
         /* Final Quote */
         .final-quote-box {
-            background: linear-gradient(135deg, var(--navy) 0%, #0d1b2a 100%);
-            border: 4px solid var(--gold);
-            border-radius: 24px;
-            padding: 45px 60px;
+            background: var(--bg-glass);
+            border: 1px solid var(--neon-gold);
+            border-radius: 32px;
+            padding: 40px;
             text-align: center;
             position: relative;
-            box-shadow: 0 15px 50px rgba(201, 162, 39, 0.35);
-            overflow: hidden;
-        }
-
-        .final-quote-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(201, 162, 39, 0.1) 0%, transparent 70%);
-        }
-
-        .quote-icon {
-            font-size: 60px;
-            color: var(--gold);
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 1;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 40px rgba(255, 204, 51, 0.1);
+            margin-top: 30px;
         }
 
         .final-quote-text {
-            font-family: 'Cairo', sans-serif;
-            font-size: 30px;
-            font-weight: 700;
-            color: var(--text-light);
-            line-height: 1.7;
+            font-family: 'Marhey', cursive;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--text-main);
+            line-height: 1.6;
             position: relative;
             z-index: 1;
         }
 
         /* Responsive */
         @media (max-width: 1200px) {
-            .content { padding: 35px 50px; }
-            .header { padding: 0 50px; }
-            .main-title { font-size: 70px; }
-            .comparison-container { flex-direction: column; align-items: center; }
-            .two-column { flex-direction: column; }
-            .left-section { flex: none; width: 100%; }
-            .scientists-grid { grid-template-columns: 1fr; }
-            .action-steps { grid-template-columns: 1fr; }
-            .story-layout { flex-direction: column; }
-            .image-section { flex: none; }
+            .content {
+                padding: 35px 50px;
+            }
+
+            .header {
+                padding: 0 50px;
+            }
+
+            .main-title {
+                font-size: 70px;
+            }
+
+            .comparison-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .two-column {
+                flex-direction: column;
+            }
+
+            .left-section {
+                flex: none;
+                width: 100%;
+            }
+
+            .scientists-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .story-layout {
+                flex-direction: column;
+            }
+
+            .image-section {
+                flex: none;
+            }
         }
 
         @media (max-width: 768px) {
-            .nav-dots { display: none; }
-            .content { padding: 25px 30px; }
-            .header { padding: 0 30px; }
-            .header h2 { font-size: 24px; }
-            .main-title { font-size: 50px; }
-            .info-cards { flex-direction: column; align-items: center; }
-            .breathing-diagram { flex-direction: column; }
-            .arrows { transform: rotate(90deg); }
+            .nav-dots {
+                display: none;
+            }
+
+            .content {
+                padding: 25px 30px;
+            }
+
+            .header {
+                padding: 0 30px;
+            }
+
+            .header h2 {
+                font-size: 24px;
+            }
+
+            .main-title {
+                font-size: 50px;
+            }
+
+            .info-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .breathing-diagram {
+                flex-direction: column;
+            }
+
+            .arrows {
+                transform: rotate(90deg);
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation Dots -->
     <nav class="nav-dots">
@@ -1102,45 +1331,46 @@
             <div class="corner-decoration top-left"></div>
             <div class="corner-decoration bottom-right"></div>
             <div class="corner-decoration bottom-left"></div>
-            
+
             <div class="content-wrapper">
                 <h1 class="main-title">لماذا نذاكر؟</h1>
-                
+
                 <div class="divider">
                     <div class="divider-line"></div>
                     <div class="divider-star">✦</div>
                     <div class="divider-line"></div>
                 </div>
-                
+
                 <p class="subtitle">مانيفستو الطالب المسيحي</p>
-                
+
                 <div class="info-cards">
                     <div class="info-card">
-                        <div class="icon-circle">🎯</div>
+                        <div class="icon-circle" style="background: rgba(255, 204, 51, 0.1); color: var(--neon-gold);">✧
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">الرؤية</div>
+                            <div class="card-value">ليتورجيا الحياة</div>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="icon-circle" style="background: rgba(0, 242, 255, 0.1); color: var(--neon-blue);">✦
+                        </div>
                         <div class="card-content">
                             <div class="card-label">الهدف</div>
-                            <div class="card-value">تغيير العدسة</div>
+                            <div class="card-value">قداسة المعرفة</div>
                         </div>
                     </div>
-                    
                     <div class="info-card">
-                        <div class="icon-circle">👥</div>
+                        <div class="icon-circle"
+                            style="background: rgba(188, 19, 254, 0.1); color: var(--neon-purple);">⚛</div>
                         <div class="card-content">
-                            <div class="card-label">الفئة</div>
-                            <div class="card-value">شباب جامعي</div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="icon-circle">⏱️</div>
-                        <div class="card-content">
-                            <div class="card-label">الوقت</div>
-                            <div class="card-value">45 دقيقة</div>
+                            <div class="card-label">المسار</div>
+                            <div class="card-value">مستقبل مبني على صخر</div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="scroll-indicator" onclick="scrollToSlide(1)">
                 <span>اسحب للأسفل</span>
                 <div class="scroll-arrow"></div>
@@ -1152,10 +1382,10 @@
             <div class="header">
                 <h2>أولاً: المقدمة (التشخيص والمدخل)</h2>
             </div>
-            
+
             <div class="content">
                 <h3 class="section-title">الواقع: متلازمة «الفصام الروحي»</h3>
-                
+
                 <div class="comparison-container">
                     <div class="comparison-card card-church">
                         <div class="card-header">
@@ -1168,7 +1398,7 @@
                             <li>يشعر بسلام الله</li>
                         </ul>
                     </div>
-                    
+
                     <div class="comparison-card card-university">
                         <div class="card-header">
                             <div class="card-icon">📚</div>
@@ -1181,11 +1411,11 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <div class="question-box">
                     <div class="question-text">هل الله موجود في قاعة المحاضرات كما هو موجود في الهيكل؟</div>
                 </div>
-                
+
                 <div class="goal-section">
                     <div class="goal-label">
                         🎯 الهدف: <span>التخلص من الانقسام الروحي</span>
@@ -1199,18 +1429,16 @@
             <div class="header">
                 <h2>القصة الكاملة: القديس مقاريوس والمرأتين</h2>
             </div>
-            
+
             <div class="content">
                 <div class="story-layout">
                     <div class="image-section">
                         <div class="image-container">
-                            <div class="image-placeholder">
-                                <div class="icon">🏜️</div>
-                                <div class="label">القديس مقاريوس في البرية</div>
-                            </div>
+                            <img src="st-makarious-2.jpg" alt="القديس مقاريوس الكبير"
+                                style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     </div>
-                    
+
                     <div class="story-section">
                         <div class="story-step">
                             <div class="step-header">
@@ -1220,16 +1448,17 @@
                             </div>
                             <p class="step-text">«يا مقاريوس، لم تصل بعد إلى درجة امرأتين في المدينة»</p>
                         </div>
-                        
+
                         <div class="story-step">
                             <div class="step-header">
                                 <span class="step-number">2️⃣</span>
                                 <span class="step-icon">🔍</span>
                                 <span class="step-title">الاكتشاف المدهش</span>
                             </div>
-                            <p class="step-text">ذهب إليهما متوقعاً نسكاً خارقاً، لكنه وجد «سلفات» يعشن حياة عادية وسط ضجيج المدينة</p>
+                            <p class="step-text">ذهب إليهما متوقعاً نسكاً خارقاً، لكنه وجد «سلفات» يعشن حياة عادية وسط
+                                ضجيج المدينة</p>
                         </div>
-                        
+
                         <div class="story-step">
                             <div class="step-header">
                                 <span class="step-number">3️⃣</span>
@@ -1240,9 +1469,10 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="quote-box">
-                    <p class="quote-text">«حقاً إن الله لا ينظر إلى زي راهب أو علماني، ولا إلى بتولية أو زواج، بل إلى نية القلب»</p>
+                    <p class="quote-text">«حقاً إن الله لا ينظر إلى زي راهب أو علماني، ولا إلى بتولية أو زواج، بل إلى
+                        نية القلب»</p>
                     <p class="quote-author">— القديس مقاريوس الكبير</p>
                 </div>
             </div>
@@ -1253,42 +1483,46 @@
             <div class="header">
                 <h2>ثانياً: المفهوم الجوهري (ليتورجيا الحياة)</h2>
             </div>
-            
+
             <div class="content">
-                <div class="content-box">
-                    <div class="box-label">«امضوا بسلام»: الانطلاق لا الانتهاء</div>
-                    <div class="box-text">لا تعني «انتهت الصلاة»، بل تعني: «لقد امتلأت بالنعمة، الآن اذهب وابدأ ليتورجيا العالم»</div>
-                </div>
-                
-                <div class="content-box">
-                    <div class="box-label">تشبيه «التنفس» (الشهيق والزفير)</div>
-                    
-                    <div class="breathing-diagram">
-                        <div class="breath-box church">
-                            <div class="breath-title">شهيق (كنيسة)</div>
-                            <div class="breath-items">
-                                <div class="breath-item">🙏 نعمة</div>
-                                <div class="breath-item">✝️ تناول</div>
-                                <div class="breath-item">🎵 تسبيح</div>
-                            </div>
+                <div class="two-column">
+                    <div class="left-section">
+                        <div class="image-container" style="height: 300px; margin-bottom: 20px;">
+                            <img src="church_inhalation.png" alt="Inhalation - Church"
+                                style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
                         </div>
-                        
-                        <div class="arrows">⇄</div>
-                        
-                        <div class="breath-box world">
-                            <div class="breath-title">زفير (عالم)</div>
-                            <div class="breath-items">
-                                <div class="breath-item">💼 أمانة</div>
-                                <div class="breath-item">⚙️ عمل</div>
-                                <div class="breath-item">🤝 خدمة</div>
+                        <div class="breathing-diagram">
+                            <div class="breath-box church">
+                                <div class="breath-title">شهيق (كنيسة)</div>
+                                <div class="breath-items">
+                                    <div class="breath-item">🙏 نعمة</div>
+                                    <div class="breath-item">✝️ تناول</div>
+                                </div>
+                            </div>
+                            <div class="arrows">⇄</div>
+                            <div class="breath-box world">
+                                <div class="breath-title">زفير (عالم)</div>
+                                <div class="breath-items">
+                                    <div class="breath-item">💼 أمانة</div>
+                                    <div class="breath-item">⚙️ عمل</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="quote-box">
-                    <p class="quote-text">«الفقير هو مذبح آخر.. هذا المذبح يمكنك أن تراه في كل مكان، ويمكنك أن تقدم عليه الذبائح في كل ساعة»</p>
-                    <p class="quote-author">— القديس يوحنا ذهبي الفم</p>
+
+                    <div class="right-section">
+                        <div class="content-box">
+                            <div class="box-label">«امضوا بسلام»: الانطلاق</div>
+                            <div class="box-text">لا تعني «انتهت الصلاة»، بل تعني: «لقد امتلأت بالنعمة، الآن اذهب وابدأ
+                                ليتورجيا العالم».</div>
+                        </div>
+
+                        <div class="quote-box">
+                            <p class="quote-text">«الفقير هو مذبح آخر.. هذا المذبح يمكنك أن تراه في كل مكان، ويمكنك أن
+                                تقديم عليه الذبائح في كل ساعة»</p>
+                            <p class="quote-author">— القديس يوحنا ذهبي الفم</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1298,7 +1532,7 @@
             <div class="header">
                 <h2>النموذج الكتابي: إبراهيم (الخيمة والمذبح)</h2>
             </div>
-            
+
             <div class="content">
                 <div class="two-column">
                     <div class="visual-section" style="flex: 0 0 40%;">
@@ -1310,13 +1544,14 @@
                         <div class="label">المذبح</div>
                         <div class="sub-label">الصلاة والشهادة</div>
                     </div>
-                    
+
                     <div class="right-section">
                         <div class="quote-box">
-                            <p class="verse-text">«وَنَقَلَ مِنْ هُنَاكَ إِلَى الْجَبَلِ... وَبَنَى هُنَاكَ مَذْبَحًا لِلرَّبِّ»</p>
+                            <p class="verse-text">«وَنَقَلَ مِنْ هُنَاكَ إِلَى الْجَبَلِ... وَبَنَى هُنَاكَ مَذْبَحًا
+                                لِلرَّبِّ»</p>
                             <p class="verse-ref">(تكوين 12: 8)</p>
                         </div>
-                        
+
                         <div class="application-box">
                             <div class="app-icon">🏔️</div>
                             <div class="app-title">التطبيق</div>
@@ -1339,7 +1574,7 @@
                     <span class="progress-item">⑤</span>
                 </div>
             </div>
-            
+
             <div class="content">
                 <div class="two-column">
                     <div class="left-section">
@@ -1354,18 +1589,19 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="right-section">
                         <div class="content-box">
                             <div class="box-label">المفهوم</div>
                             <div class="box-text">الله لم يخلق الكون ويتركه، بل هو مستمر في «عناية» تحفظ الوجود</div>
                         </div>
-                        
+
                         <div class="content-box">
                             <div class="box-label">التطبيق</div>
-                            <div class="box-text">المذاكرة هي اشتراك مع الله في صيانة العالم. الطبيب يشارك الله في الشفاء، والمهندس يشاركه في النظام</div>
+                            <div class="box-text">المذاكرة هي اشتراك مع الله في صيانة العالم. الطبيب يشارك الله في
+                                الشفاء، والمهندس يشاركه في النظام</div>
                         </div>
-                        
+
                         <div class="quote-box">
                             <p class="verse-text">«فَإِنَّنَا نَحْنُ عَامِلاَنِ مَعَ اللهِ»</p>
                             <p class="verse-ref">(1 كورنثوس 3: 9)</p>
@@ -1376,6 +1612,8 @@
                 </div>
             </div>
         </section>
+
+
 
         <!-- ===== SLIDE 7: Principle 2 - Book of Nature ===== -->
         <section class="slide slide-content" id="slide-6">
@@ -1389,7 +1627,7 @@
                     <span class="progress-item">⑤</span>
                 </div>
             </div>
-            
+
             <div class="content">
                 <div class="two-column">
                     <div class="left-section">
@@ -1404,20 +1642,25 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="right-section">
                         <div class="content-box">
                             <div class="box-label">المفهوم</div>
                             <div class="box-text">آدم هو العالم الأول. تكليفه بتسمية الحيوانات كان أول بحث علمي</div>
                         </div>
-                        
+
                         <div class="content-box">
                             <div class="box-label">التطبيق</div>
-                            <div class="box-text">نحن وكلاء (Stewards) لتنمية الخليقة. المذاكرة وسيلة لفهم الله من خلال مخلوقاته</div>
+                            <div class="box-text">نحن وكلاء (Stewards) لتنمية الخليقة. المذاكرة وسيلة لفهم الله من خلال
+                                مخلوقاته</div>
                         </div>
-                        
+
                         <div class="quote-box">
-                            <p class="quote-text">«العالم مدرسة لتعليم النفوس، وكتاب مفتوح يرشدنا إلى معرفة الله من خلال عظمة مخلوقاته»</p>
+                            <p class="verse-text">«وَأَخَذَ الرَّبُّ الإِلهُ آدَمَ وَوَضَعَهُ فِي جَنَّةِ عَدْنٍ
+                                لِيَعْمَلَهَا وَيَحْفَظَهَا»</p>
+                            <p class="verse-ref">(تكوين 2: 15)</p>
+                            <p class="quote-text">«العالم مدرسة لتعليم النفوس، وكتاب مفتوح يرشدنا إلى معرفة الله من خلال
+                                عظمة مخلوقاته»</p>
                             <p class="quote-author">— القديس باسيليوس الكبير</p>
                         </div>
                     </div>
@@ -1437,14 +1680,15 @@
                     <span class="progress-item">⑤</span>
                 </div>
             </div>
-            
+
             <div class="content">
                 <div class="two-column">
                     <div class="left-section">
                         <div class="number-circle">3</div>
                         <div class="title-section">
                             <div class="principle-title">التواضع: درس «صناعة الخيام»</div>
-                            <div class="principle-subtitle" style="color: var(--burgundy);">كسر الـ Ego - التواضع الحقيقي</div>
+                            <div class="principle-subtitle" style="color: var(--neon-purple);">كسر الـ Ego - التواضع
+                                الحقيقي</div>
                         </div>
                         <div class="image-container" style="height: 200px;">
                             <div class="image-placeholder">
@@ -1452,25 +1696,27 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="right-section">
                         <div class="content-box">
                             <div class="box-label">المشكلة</div>
                             <div class="box-text">كبرياء الجامعة: «أنا دكتور/مهندس» — التمركز حول الذات</div>
                         </div>
-                        
+
                         <div class="content-box">
                             <div class="box-label">القدوة العظمى (يسوع النجار)</div>
                             <div class="box-text">رب المجد قضى 30 سنة يعمل نجاراً بيده — «أليس هذا هو النجار؟»</div>
                         </div>
-                        
+
                         <div class="content-box">
                             <div class="box-label">القدوة الرسولية (بولس)</div>
-                            <div class="box-text">الفيلسوف الكبير كان يعمل «صانع خيام» بيده — لم يخجل من العمل اليدوي</div>
+                            <div class="box-text">الفيلسوف الكبير كان يعمل «صانع خيام» بيده — لم يخجل من العمل اليدوي
+                            </div>
                         </div>
-                        
+
                         <div class="quote-box">
-                            <p class="quote-text">«بولس، معلم المسكونة... لم يخجل من أن يمسك الجلد والمقص ويخيط الخيام.. ليعلمنا أن البطالة هي معلمة كل الشرور»</p>
+                            <p class="quote-text">«بولس، معلم المسكونة... لم يخجل من أن يمسك الجلد والمقص ويخيط الخيام..
+                                ليعلمنا أن البطالة هي معلمة كل الشرور»</p>
                             <p class="quote-author">— القديس يوحنا ذهبي الفم</p>
                         </div>
                     </div>
@@ -1490,14 +1736,16 @@
                     <span class="progress-item">⑤</span>
                 </div>
             </div>
-            
+
             <div class="content">
                 <div class="two-column">
                     <div class="left-section">
                         <div class="number-circle">4</div>
                         <div class="title-section">
                             <div class="principle-title">التميز: الأمانة قبل النتيجة</div>
-                            <div class="principle-subtitle" style="color: var(--gold);">معيار دانيال — الإتقان المطلق</div>
+                            <div class="principle-subtitle" style="color: var(--neon-gold);">معيار دانيال — الإتقان
+                                المطلق
+                            </div>
                         </div>
                         <div class="image-container" style="height: 200px;">
                             <div class="image-placeholder">
@@ -1505,22 +1753,26 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="right-section">
                         <div class="content-box">
                             <div class="box-label">المبدأ</div>
-                            <div class="box-text">الله لا يطلب «النجاح الدائم» (الدرجات)، بل يطلب «الأمانة المطلقة» (الجهد)</div>
+                            <div class="box-text">الله لا يطلب «النجاح الدائم» (الدرجات)، بل يطلب «الأمانة المطلقة»
+                                (الجهد)</div>
                         </div>
-                        
+
                         <div class="content-box">
                             <div class="box-label">التطبيق</div>
-                            <div class="box-text">النتيجة بين يدي الله، لكن الجهد مطلوب منك. كن نموذجاً في كل شيء بلا كسل أو تهاون</div>
+                            <div class="box-text">النتيجة بين يدي الله، لكن الجهد مطلوب منك. كن نموذجاً في كل شيء بلا
+                                كسل أو تهاون</div>
                         </div>
-                        
+
                         <div class="quote-box">
-                            <p class="verse-text">«لأَنَّ اللهَ لَيْسَ بِظَالِمٍ حَتَّى يَنْسَى عَمَلَكُمْ وَتَعَبَ الْمَحَبَّةِ»</p>
+                            <p class="verse-text">«لأَنَّ اللهَ لَيْسَ بِظَالِمٍ حَتَّى يَنْسَى عَمَلَكُمْ وَتَعَبَ
+                                الْمَحَبَّةِ»</p>
                             <p class="verse-ref">(عبرانيين 6: 10)</p>
-                            <p class="quote-text">«يجب على المسيحي ألا يقدم عملاً ناقصاً أو رديئاً (ذبيحة عرجاء)، بل يجب أن يكون نموذجاً في كل شيء»</p>
+                            <p class="quote-text">«يجب على المسيحي ألا يقدم عملاً ناقصاً أو رديئاً (ذبيحة عرجاء)، بل يجب
+                                أن يكون نموذجاً في كل شيء»</p>
                             <p class="quote-author">— القديس باسيليوس الكبير</p>
                         </div>
                     </div>
@@ -1540,14 +1792,15 @@
                     <span class="progress-item active">⑤</span>
                 </div>
             </div>
-            
+
             <div class="content">
                 <div class="two-column">
                     <div class="left-section">
                         <div class="number-circle">5</div>
                         <div class="title-section">
-                            <div class="principle-title">الصحة النفسية: «الاستشهاد الأبيض»</div>
-                            <div class="principle-subtitle" style="color: #8B7E74;">ضد الأكديا — الروح المعنوية</div>
+                            <div class="principle-title">نفسية الطالب: الانتصار على الملل</div>
+                            <div class="principle-subtitle" style="color: var(--neon-blue);">ازاي المذاكرة تحمينا من
+                                الزهق والضيق؟</div>
                         </div>
                         <div class="image-container" style="height: 200px;">
                             <div class="image-placeholder">
@@ -1555,20 +1808,23 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="right-section">
                         <div class="content-box">
-                            <div class="box-label">المشكلة</div>
-                            <div class="box-text">«شيطان الظهيرة» (الضجر/الملل) يسبب الاكتئاب والحروب الفكرية</div>
+                            <div class="box-label">المشكلة: خطورة الفراغ</div>
+                            <div class="box-text">الفراغ هو "ملعب الشيطان"؛ لما بنبطل ننتج، بنفتح الباب للأرق، القلق،
+                                والأفكار اللي بتتعبنا نفسياً.</div>
                         </div>
-                        
+
                         <div class="content-box">
-                            <div class="box-label">العلاج</div>
-                            <div class="box-text">قصة الملاك والأنبا أنطونيوس: «اعمل هذا وتستريح». العمل هو حماية روحية</div>
+                            <div class="box-label">الحل: الشغل "حماية"</div>
+                            <div class="box-text">المذاكرة المخلصة بتملى يومك بالمعنى وبتحمي عقلك. زي نصيحة الملاك
+                                للأنبا أنطونيوس: "اشتغل عشان تستريح".</div>
                         </div>
-                        
+
                         <div class="quote-box">
-                            <p class="quote-text">«الراهب الذي يعمل يهاجمه شيطان واحد، أما الراهب العاطل فتعبث به شياطين لا حصر لها»</p>
+                            <p class="quote-text">«الراهب الذي يعمل يهاجمه شيطان واحد، أما الراهب العاطل فتعبث به شياطين
+                                لا حصر لها»</p>
                             <p class="quote-author">— القديس يوحنا كاسيان</p>
                         </div>
                     </div>
@@ -1581,44 +1837,35 @@
             <div class="header">
                 <h2>رابعاً: موكب النور (من الإسكندرية إلى المعمل)</h2>
             </div>
-            
+
             <div class="content">
-                <div class="section-title" style="margin-bottom: 20px;">تاريخنا يثبت أن العلم كان دائماً خادماً للإيمان</div>
-                
+                <div class="section-title" style="margin-bottom: 20px;">تاريخنا يثبت أن العلم كان دائماً خادماً للإيمان
+                </div>
+
                 <div class="scientists-grid">
                     <div class="scientist-card">
-                        <div class="scientist-header">
-                            <span class="scientist-icon">📚</span>
-                            <span class="scientist-title">مدرسة الإسكندرية</span>
-                        </div>
-                        <div class="scientist-subtitle">الجذور</div>
+                        <div class="scientist-title">مدرسة الإسكندرية</div>
                         <div class="scientist-name">القديس بنتينوس</div>
-                        <div class="scientist-description">ترك كرسيه الأكاديمي ليقود الكرازة في الهند بعقله الفلسفي</div>
-                    </div>
-                    
-                    <div class="scientist-card">
-                        <div class="scientist-header">
-                            <span class="scientist-icon">🧬</span>
-                            <span class="scientist-title">غريغور مندل</span>
+                        <div class="scientist-description">ترك كرسيه الأكاديمي ليقود الكرازة في الهند بعقله الفلسفي
                         </div>
-                        <div class="scientist-subtitle">أبو الوراثة</div>
+                    </div>
+
+                    <div class="scientist-card">
+                        <div class="scientist-title">غريغور مندل</div>
                         <div class="scientist-name">الراهب العالم</div>
                         <div class="scientist-description">اكتشف قوانين الوراثة في حديقة ديره</div>
                     </div>
-                    
+
                     <div class="scientist-card">
-                        <div class="scientist-header">
-                            <span class="scientist-icon">🔬</span>
-                            <span class="scientist-title">لويس باستير</span>
-                        </div>
-                        <div class="scientist-subtitle">الثمار</div>
+                        <div class="scientist-title">لويس باستير</div>
                         <div class="scientist-name">العالم المؤمن</div>
-                        <div class="scientist-description">«القليل من العلم يبعدك عن الله، ولكن الكثير منه يعيدك إليه»</div>
+                        <div class="scientist-description">«القليل من العلم يبعدك عن الله، ولكن الكثير منه يعيدك إليه»
+                        </div>
                     </div>
                 </div>
-                
+
                 <div class="featured-card">
-                    <div class="featured-icon">💚</div>
+                    <div style="font-size: 50px;">💚</div>
                     <div class="featured-content">
                         <div class="featured-name">د. مجدي يعقوب — المعاصر</div>
                         <div class="featured-description">نموذج حوّل العلم إلى رسالة رحمة، ليرى المسيح في كل مريض</div>
@@ -1632,29 +1879,38 @@
             <div class="header">
                 <h2>خامساً: الخاتمة (ذبيحة حية)</h2>
             </div>
-            
+
             <div class="content">
-                <div class="section-title">الوصية العملية</div>
-                
-                <div class="action-steps">
-                    <div class="action-card">
-                        <div class="action-number">1️⃣</div>
-                        <div class="action-title">ضع صليباً صغيراً على مكتبك</div>
-                        <div class="action-description">لتتذكر أنه مكان مقدس</div>
-                    </div>
-                    
-                    <div class="action-card">
-                        <div class="action-number">2️⃣</div>
-                        <div class="action-title">صلِّ قبل المذاكرة</div>
-                        <div class="prayer-box">
-                            <p class="prayer-text">«يا رب، اقبل تعبي كذبيحة حب، واستخدمني كشريك في عملك لبنيان عالمك»</p>
+                <div class="two-column">
+                    <div class="left-section">
+                        <div class="image-container" style="height: 350px;">
+                            <img src="study_desk_cross.jpg" alt="Study Desk with Cross"
+                                style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px; border: 1px solid var(--neon-gold);">
                         </div>
                     </div>
-                </div>
-                
-                <div class="final-quote-box">
-                    <div class="quote-icon">✝️</div>
-                    <p class="final-quote-text">«المذاكرة ليست عبودية للمجموع...<br>هي رسالة، ووكالة، وشركة مع الله»</p>
+                    <div class="right-section">
+                        <div class="section-title" style="text-align: right; margin-bottom: 15px;">الوصية العملية</div>
+                        <div class="action-steps" style="grid-template-columns: 1fr; gap: 15px;">
+                            <div class="action-card" style="padding: 20px;">
+                                <div class="action-title">البيئة المقدسة</div>
+                                <div class="action-description">ضع صليباً صغيراً على مكتبك لتتذكر أنه مكان مقدس للشركة
+                                    مع الله.</div>
+                            </div>
+
+                            <div class="action-card" style="padding: 20px;">
+                                <div class="action-title">الصلاة العاملة</div>
+                                <div class="prayer-box" style="margin-top: 10px; padding: 15px;">
+                                    <p class="prayer-text">«يا رب، اقبل تعبي كذبيحة حب، واستخدمني كشريك في عملك لبنيان
+                                        عالمك»</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="final-quote-box" style="margin-top: 15px; padding: 25px;">
+                            <p class="final-quote-text" style="font-size: 22px;">«المذاكرة ليست عبودية للمجموع... هي
+                                رسالة، ووكالة، وشركة مع الله»</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1682,7 +1938,8 @@
     <!-- Fullscreen Button -->
     <button class="fullscreen-btn" id="fullscreenBtn" title="ملء الشاشة (F)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+            </path>
         </svg>
     </button>
 
@@ -1710,23 +1967,21 @@
             width: 55px;
             height: 55px;
             border-radius: 50%;
-            background: rgba(30, 42, 74, 0.9);
-            border: 2px solid var(--gold);
-            color: var(--gold);
+            background: var(--bg-glass);
+            border: 1px solid var(--glass-border);
+            color: var(--neon-gold);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .nav-arrow:hover {
-            background: var(--gold);
-            color: var(--navy);
-            transform: scale(1.15);
-            box-shadow: 0 6px 30px rgba(201, 162, 39, 0.4);
+            border-color: var(--neon-gold);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
         .nav-arrow:active {
@@ -1741,7 +1996,7 @@
 
         .nav-arrow:disabled:hover {
             background: rgba(30, 42, 74, 0.9);
-            color: var(--gold);
+            color: var(--neon-gold);
             transform: none;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
@@ -1752,15 +2007,16 @@
         }
 
         .slide-counter {
+            display: none;
+            /* Hidden as per user request */
             background: rgba(30, 42, 74, 0.95);
-            border: 2px solid var(--gold);
+            border: 2px solid var(--neon-gold);
             border-radius: 25px;
             padding: 10px 18px;
             font-family: 'Cairo', sans-serif;
             font-size: 18px;
             font-weight: 700;
-            color: var(--gold);
-            display: flex;
+            color: var(--neon-gold);
             align-items: center;
             gap: 5px;
             backdrop-filter: blur(10px);
@@ -1780,8 +2036,8 @@
             height: 50px;
             border-radius: 12px;
             background: rgba(30, 42, 74, 0.9);
-            border: 2px solid var(--gold);
-            color: var(--gold);
+            border: 2px solid var(--neon-gold);
+            color: var(--neon-gold);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1793,8 +2049,8 @@
         }
 
         .fullscreen-btn:hover {
-            background: var(--gold);
-            color: var(--navy);
+            background: var(--neon-gold);
+            color: var(--bg-dark);
             transform: scale(1.1);
         }
 
@@ -1809,7 +2065,7 @@
             bottom: 25px;
             right: 30px;
             background: rgba(30, 42, 74, 0.95);
-            border: 2px solid var(--gold);
+            border: 2px solid var(--neon-gold);
             border-radius: 12px;
             padding: 12px 20px;
             display: flex;
@@ -1831,7 +2087,7 @@
             font-family: 'Cairo', sans-serif;
             font-size: 16px;
             font-weight: 700;
-            color: var(--gold);
+            color: var(--neon-gold);
         }
 
         .presenter-hint .hint-keys {
@@ -1852,10 +2108,10 @@
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            background: linear-gradient(90deg, var(--neon-gold), var(--gold-light));
             width: 0%;
             transition: width 0.3s ease;
-            box-shadow: 0 0 10px var(--gold);
+            box-shadow: 0 0 10px var(--neon-gold);
         }
 
         /* Keyboard shortcut overlay */
@@ -1865,7 +2121,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(30, 42, 74, 0.98);
-            border: 3px solid var(--gold);
+            border: 3px solid var(--neon-gold);
             border-radius: 20px;
             padding: 40px 50px;
             z-index: 2000;
@@ -1884,7 +2140,7 @@
         .keyboard-overlay h3 {
             font-family: 'Cairo', sans-serif;
             font-size: 24px;
-            color: var(--gold);
+            color: var(--neon-gold);
             margin-bottom: 25px;
             text-align: center;
         }
@@ -1908,19 +2164,20 @@
         }
 
         .key {
-            background: rgba(201, 162, 39, 0.2);
-            border: 1px solid var(--gold);
+            background: rgba(255, 204, 51, 0.1);
+            border: 1px solid var(--neon-gold);
             border-radius: 8px;
             padding: 8px 14px;
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Marhey', sans-serif;
             font-size: 14px;
-            font-weight: 700;
-            color: var(--gold);
+            font-weight: 500;
+            color: var(--neon-gold);
+            box-shadow: 0 0 10px rgba(255, 204, 51, 0.2);
         }
 
         .shortcut-desc {
             font-size: 16px;
-            color: var(--text-light);
+            color: var(--text-main);
         }
 
         .close-overlay {
@@ -1931,8 +2188,8 @@
             height: 35px;
             border-radius: 50%;
             background: transparent;
-            border: 2px solid var(--gold);
-            color: var(--gold);
+            border: 2px solid var(--neon-gold);
+            color: var(--neon-gold);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1942,37 +2199,37 @@
         }
 
         .close-overlay:hover {
-            background: var(--gold);
-            color: var(--navy);
+            background: var(--neon-gold);
+            color: var(--bg-dark);
         }
 
         /* Help Button */
         .help-btn {
             position: fixed;
-            bottom: 25px;
-            left: 80px;
-            width: 45px;
-            height: 45px;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: rgba(30, 42, 74, 0.9);
-            border: 2px solid var(--gold);
-            color: var(--gold);
+            background: var(--bg-glass);
+            border: 1px solid var(--glass-border);
+            color: var(--neon-gold);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Cairo', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-            transition: all 0.3s ease;
+            font-family: 'Marhey', sans-serif;
+            font-size: 22px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(10px);
             z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
 
         .help-btn:hover {
-            background: var(--gold);
-            color: var(--navy);
-            transform: scale(1.1);
+            border-color: var(--neon-gold);
+            transform: rotate(15deg) scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 204, 51, 0.2);
         }
 
         /* Hide elements in fullscreen for cleaner presentation */
@@ -2024,6 +2281,9 @@
             }
         }
     </style>
+
+    <div class="ambient-bg"></div>
+    <div class="grid-overlay"></div>
 
     <!-- Progress Bar -->
     <div class="progress-bar-container">
@@ -2113,23 +2373,37 @@
 
         function scrollToSlide(index) {
             if (index < 0 || index >= totalSlides) return;
+
+            const prevIndex = currentIndex;
             currentIndex = index;
-            slides[index].scrollIntoView({ behavior: 'smooth' });
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i === currentIndex) {
+                    slide.classList.add('active');
+                } else if (i < currentIndex) {
+                    slide.classList.add('prev');
+                }
+            });
+
             updateNavigation();
         }
+
+        // Initialize first slide
+        slides[0].classList.add('active');
 
         function updateNavigation() {
             // Update counter
             currentSlideEl.textContent = currentIndex + 1;
-            
+
             // Update progress bar
             const progress = ((currentIndex + 1) / totalSlides) * 100;
             progressBar.style.width = progress + '%';
-            
+
             // Update arrow buttons
             navUp.disabled = currentIndex === 0;
             navDown.disabled = currentIndex === totalSlides - 1;
-            
+
             // Update dots
             dots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === currentIndex);
@@ -2163,6 +2437,8 @@
         }
 
         // Update active slide on scroll
+        // Remove the observer as we are not using scroll anymore
+        /*
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -2173,6 +2449,7 @@
         }, { threshold: 0.5 });
 
         slides.forEach(slide => observer.observe(slide));
+        */
 
         // Click navigation - dots
         dots.forEach((dot, index) => {
@@ -2307,7 +2584,7 @@
         container.addEventListener('touchend', (e) => {
             touchEndY = e.changedTouches[0].screenY;
             const diff = touchStartY - touchEndY;
-            
+
             if (Math.abs(diff) > 50) { // Minimum swipe distance
                 if (diff > 0) {
                     nextSlide(); // Swipe up = next
@@ -2327,25 +2604,38 @@
         });
         */
 
-        // Add entrance animations
-        const animateOnScroll = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
+        // Cinematic entrance animations on slide change
+        function triggerSlideAnimations(slide) {
+            const animatable = slide.querySelectorAll('.content-box, .story-step, .comparison-card, .scientist-card, .action-card, .info-card');
+            animatable.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px) scale(0.95)';
+                el.style.transition = 'none';
+
+                setTimeout(() => {
+                    el.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0) scale(1)';
+                }, 100 + (index * 150));
             });
-        }, { threshold: 0.2 });
+        }
 
-        document.querySelectorAll('.content-box, .story-step, .comparison-card, .scientist-card, .action-card').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            animateOnScroll.observe(el);
-        });
+        // Hook trigger into scrollToSlide
+        const originalScrollToSlide = scrollToSlide;
+        scrollToSlide = function (index) {
+            originalScrollToSlide(index);
+            triggerSlideAnimations(slides[index]);
+        };
 
-        // Prevent default scroll behavior for smoother slide transitions
-        container.style.scrollBehavior = 'smooth';
+        // Initial trigger
+        triggerSlideAnimations(slides[0]);
+
+        // Prevent default scroll behavior
+        document.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) return; // Allow zooming
+            // e.preventDefault(); // This can be risky, keeping trackpad swipe
+        }, { passive: true });
     </script>
 </body>
+
 </html>
