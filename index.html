@@ -131,7 +131,8 @@
             transition: opacity var(--slide-transition), transform var(--slide-transition), visibility var(--slide-transition);
             display: flex;
             flex-direction: column;
-            padding: 20px 40px;
+            padding: 30px 40px 100px 40px;
+            /* Increased bottom padding */
             box-sizing: border-box;
             background-color: transparent;
             transform: translateY(20px) scale(0.98);
@@ -288,7 +289,8 @@
             font-size: 32px;
             color: var(--text-main);
             font-weight: 300;
-            margin-bottom: 60px;
+            margin-bottom: 30px;
+            /* Reduced to make room for cards */
             letter-spacing: 1px;
         }
 
@@ -474,12 +476,13 @@
 
         .content {
             flex: 1;
-            padding: 20px 40px;
+            padding: 20px 40px 60px 40px;
+            /* Added more bottom padding to content too */
             display: flex;
             flex-direction: column;
             gap: 20px;
             justify-content: center;
-            /* Center content vertically if space permits */
+            /* Center content vertically if there's space */
         }
 
         /* Progress Indicator */
@@ -1227,6 +1230,8 @@
             backdrop-filter: blur(20px);
             box-shadow: 0 0 40px rgba(255, 204, 51, 0.1);
             margin-top: 30px;
+            margin-bottom: 30px;
+            /* Added spacing */
         }
 
         .final-quote-text {
