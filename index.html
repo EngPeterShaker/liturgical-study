@@ -406,39 +406,15 @@
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: none;
-            /* Instant reset when hidden */
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            pointer-events: none;
+            /* Avoid blocking clicks when invisible */
         }
 
-        .slide.active .reveal {
+        .reveal.visible {
             opacity: 1;
             transform: translateY(0);
-            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .slide.active .reveal:nth-child(1) {
-            transition-delay: 0.2s;
-        }
-
-        .slide.active .reveal:nth-child(2) {
-            transition-delay: 0.4s;
-        }
-
-        .slide.active .reveal:nth-child(3) {
-            transition-delay: 0.6s;
-        }
-
-        .slide.active .reveal:nth-child(4) {
-            transition-delay: 0.8s;
-        }
-
-        .slide.active .reveal:nth-child(5) {
-            transition-delay: 1.0s;
-        }
-
-        /* Handle deeper nesting/more items */
-        .slide.active .reveal .reveal {
-            transition-delay: inherit;
+            pointer-events: auto;
         }
 
         .header {
@@ -686,7 +662,7 @@
             border-radius: 30px;
             padding: 15px 40px;
             font-size: 22px;
-            color: var(--bg-dark);
+            color: var(--text-main);
             font-weight: 600;
             transition: all 0.3s ease;
         }
@@ -1082,7 +1058,7 @@
             font-family: 'Cairo', sans-serif;
             font-size: 24px;
             font-weight: 700;
-            color: var(--bg-dark);
+            color: var(--text-main);
         }
 
         .sub-label {
@@ -1116,7 +1092,7 @@
             font-family: 'Cairo', sans-serif;
             font-size: 24px;
             font-weight: 600;
-            color: var(--bg-dark);
+            color: var(--text-main);
             line-height: 1.7;
         }
 
@@ -1372,15 +1348,15 @@
             <div class="corner-decoration bottom-left"></div>
 
             <div class="content-wrapper">
-                <h1 class="main-title reveal">لماذا نذاكر؟</h1>
-
-                <div class="divider reveal">
-                    <div class="divider-line"></div>
-                    <div class="divider-star">✦</div>
-                    <div class="divider-line"></div>
+                <div class="reveal">
+                    <h1 class="main-title">لماذا نذاكر؟</h1>
+                    <div class="divider">
+                        <div class="divider-line"></div>
+                        <div class="divider-star">✦</div>
+                        <div class="divider-line"></div>
+                    </div>
+                    <p class="subtitle">مانيفستو الطالب المسيحي</p>
                 </div>
-
-                <p class="subtitle reveal">مانيفستو الطالب المسيحي</p>
 
                 <div class="info-cards">
                     <div class="info-card reveal">
@@ -1410,15 +1386,15 @@
                 </div>
             </div>
 
-            <div class="scroll-indicator" onclick="scrollToSlide(1)">
+            <button class="scroll-indicator" onclick="event.stopPropagation(); scrollToSlide(1)">
                 <span>اسحب للأسفل</span>
                 <div class="scroll-arrow"></div>
-            </div>
+            </button>
         </section>
 
         <!-- ===== SLIDE 2: Spiritual Schizophrenia ===== -->
         <section class="slide slide-content" id="slide-1">
-            <div class="header">
+            <div class="header reveal">
                 <h2>أولاً: المقدمة (التشخيص والمدخل)</h2>
             </div>
 
@@ -1465,7 +1441,7 @@
 
         <!-- ===== SLIDE 3: St. Macarius Story ===== -->
         <section class="slide slide-content" id="slide-2">
-            <div class="header">
+            <div class="header reveal">
                 <h2>القصة الكاملة: القديس مقاريوس والمرأتين</h2>
             </div>
 
@@ -1519,7 +1495,7 @@
 
         <!-- ===== SLIDE 4: Liturgy of Life ===== -->
         <section class="slide slide-content" id="slide-3">
-            <div class="header">
+            <div class="header reveal">
                 <h2>ثانياً: المفهوم الجوهري (ليتورجيا الحياة)</h2>
             </div>
 
@@ -1568,7 +1544,7 @@
 
         <!-- ===== SLIDE 5: Abraham Model ===== -->
         <section class="slide slide-content" id="slide-4">
-            <div class="header">
+            <div class="header reveal">
                 <h2>النموذج الكتابي: إبراهيم (الخيمة والمذبح)</h2>
             </div>
 
@@ -1603,7 +1579,7 @@
 
         <!-- ===== SLIDE 6: Principle 1 - Synergia ===== -->
         <section class="slide slide-content" id="slide-5">
-            <div class="header">
+            <div class="header reveal">
                 <h2>المبادئ الخمسة للمذاكرة المسيحية</h2>
                 <div class="progress-indicator">
                     <span class="progress-item active">①</span>
@@ -1656,7 +1632,7 @@
 
         <!-- ===== SLIDE 7: Principle 2 - Book of Nature ===== -->
         <section class="slide slide-content" id="slide-6">
-            <div class="header">
+            <div class="header reveal">
                 <h2>المبادئ الخمسة للمذاكرة المسيحية</h2>
                 <div class="progress-indicator">
                     <span class="progress-item">①</span>
@@ -1709,7 +1685,7 @@
 
         <!-- ===== SLIDE 8: Principle 3 - Tent-making ===== -->
         <section class="slide slide-content" id="slide-7">
-            <div class="header">
+            <div class="header reveal">
                 <h2>المبادئ الخمسة للمذاكرة المسيحية</h2>
                 <div class="progress-indicator">
                     <span class="progress-item">①</span>
@@ -1765,7 +1741,7 @@
 
         <!-- ===== SLIDE 9: Principle 4 - Excellence ===== -->
         <section class="slide slide-content" id="slide-8">
-            <div class="header">
+            <div class="header reveal">
                 <h2>المبادئ الخمسة للمذاكرة المسيحية</h2>
                 <div class="progress-indicator">
                     <span class="progress-item">①</span>
@@ -1821,7 +1797,7 @@
 
         <!-- ===== SLIDE 10: Principle 5 - White Martyrdom ===== -->
         <section class="slide slide-content" id="slide-9">
-            <div class="header">
+            <div class="header reveal">
                 <h2>المبادئ الخمسة للمذاكرة المسيحية</h2>
                 <div class="progress-indicator">
                     <span class="progress-item">①</span>
@@ -1873,7 +1849,7 @@
 
         <!-- ===== SLIDE 11: Parade of Light ===== -->
         <section class="slide slide-content" id="slide-10">
-            <div class="header">
+            <div class="header reveal">
                 <h2>رابعاً: موكب النور (من الإسكندرية إلى المعمل)</h2>
             </div>
 
@@ -1916,7 +1892,7 @@
 
         <!-- ===== SLIDE 12: Conclusion ===== -->
         <section class="slide slide-content" id="slide-11">
-            <div class="header">
+            <div class="header reveal">
                 <h2>خامساً: الخاتمة (ذبيحة حية)</h2>
             </div>
 
@@ -2412,16 +2388,22 @@
             setTimeout(() => presenterHint.classList.remove('show'), 4000);
         }, 1500);
 
-        function scrollToSlide(index) {
+        function scrollToSlide(index, revealAll = false) {
             if (index < 0 || index >= totalSlides) return;
 
-            const prevIndex = currentIndex;
             currentIndex = index;
 
+            // Update ALL slides Visibility and Reveals
             slides.forEach((slide, i) => {
                 slide.classList.remove('active', 'prev');
+
+                // Reset reveals for ALL slides
+                const reveals = slide.querySelectorAll('.reveal');
+                reveals.forEach(r => r.classList.remove('visible'));
+
                 if (i === currentIndex) {
                     slide.classList.add('active');
+                    if (revealAll) reveals.forEach(r => r.classList.add('visible'));
                 } else if (i < currentIndex) {
                     slide.classList.add('prev');
                 }
@@ -2452,14 +2434,29 @@
         }
 
         function nextSlide() {
-            if (currentIndex < totalSlides - 1) {
+            const currentSlide = slides[currentIndex];
+            const unrevealed = currentSlide.querySelectorAll('.reveal:not(.visible)');
+
+            if (unrevealed.length > 0) {
+                // Find the first one and show it
+                unrevealed[0].classList.add('visible');
+            } else if (currentIndex < totalSlides - 1) {
                 scrollToSlide(currentIndex + 1);
             }
         }
 
         function prevSlide() {
-            if (currentIndex > 0) {
+            const currentSlide = slides[currentIndex];
+            const revealed = currentSlide.querySelectorAll('.reveal.visible');
+
+            if (revealed.length > 0) {
+                // Remove last revealed block
+                revealed[revealed.length - 1].classList.remove('visible');
+            } else if (currentIndex > 0) {
                 scrollToSlide(currentIndex - 1);
+                // When going back, show all elements of previous slide
+                const prevSlide = slides[currentIndex];
+                prevSlide.querySelectorAll('.reveal').forEach(r => r.classList.add('visible'));
             }
         }
 
@@ -2492,14 +2489,24 @@
         slides.forEach(slide => observer.observe(slide));
         */
 
-        // Click navigation - dots
+        // Click navigation - dots (Direct slide access reveals all blocks)
         dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => scrollToSlide(index));
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                scrollToSlide(index, true);
+            });
+        });
+
+        // Click anywhere to progress (PPT behavior)
+        document.addEventListener('click', (e) => {
+            // Avoid triggering on buttons, dots, etc.
+            if (e.target.closest('button') || e.target.closest('.nav-dots') || e.target.closest('.keyboard-overlay')) return;
+            nextSlide();
         });
 
         // Click navigation - arrows
-        navUp.addEventListener('click', prevSlide);
-        navDown.addEventListener('click', nextSlide);
+        navUp.addEventListener('click', (e) => { e.stopPropagation(); prevSlide(); });
+        navDown.addEventListener('click', (e) => { e.stopPropagation(); nextSlide(); });
 
         // Fullscreen button
         fullscreenBtn.addEventListener('click', toggleFullscreen);
